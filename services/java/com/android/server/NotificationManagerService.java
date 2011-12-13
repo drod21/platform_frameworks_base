@@ -16,6 +16,9 @@
 
 package com.android.server;
 
+import static android.provider.Settings.System.NOTIFICATION_PULSE_COLOR;
+import static android.provider.Settings.System.NOTIFICATION_PULSE_COLOR_FALLBACK;
+
 import com.android.internal.statusbar.StatusBarNotification;
 
 import android.app.ActivityManagerNative;
@@ -407,8 +410,23 @@ public class NotificationManagerService extends INotificationManager.Stub
         mAttentionLight = lights.getLight(LightsService.LIGHT_ID_ATTENTION);
 
         Resources resources = mContext.getResources();
-        mDefaultNotificationColor = resources.getColor(
-                com.android.internal.R.color.config_defaultNotificationColor);
+        
+        /* Turl - I always get -1337 here instead of the saved setting */
+        
+        mDefaultNotificationColor = Settings.System.getInt(mContext.getContentResolver(), 
+				   NOTIFICATION_PULSE_COLOR, 
+				   -1337);
+
+        Log.w(TAG, "Got pulse color: " + mDefaultNotificationColor);
+        
+        /*
+        mDefaultNotificationColor = Settings.System.getInt(mContext.getContentResolver(), 
+        												   NOTIFICATION_PULSE_COLOR, 
+        												   NOTIFICATION_PULSE_COLOR_FALLBACK);
+        
+        Log.w(TAG, "Got color pref: " + mDefaultNotificationColor);
+        */
+        
         mDefaultNotificationLedOn = resources.getInteger(
                 com.android.internal.R.integer.config_defaultNotificationLedOn);
         mDefaultNotificationLedOff = resources.getInteger(
@@ -1081,13 +1099,22 @@ public class NotificationManagerService extends INotificationManager.Stub
             int ledARGB = mLedNotification.notification.ledARGB;
             int ledOnMS = mLedNotification.notification.ledOnMS;
             int ledOffMS = mLedNotification.notification.ledOffMS;
+            
+            Log.w(TAG, "Notification color is: " + ledARGB);
+            
             if ((mLedNotification.notification.defaults & Notification.DEFAULT_LIGHTS) != 0) {
                 ledARGB = mDefaultNotificationColor;
                 ledOnMS = mDefaultNotificationLedOn;
                 ledOffMS = mDefaultNotificationLedOff;
+                
+                Log.w(TAG, "Using default notification color: " + mDefaultNotificationColor);
             }
+                
             if (mNotificationPulseEnabled) {
                 // pulse repeatedly
+            	
+            	Log.w(TAG, "Sending light color: " + ledARGB);
+            	
                 mNotificationLight.setFlashing(ledARGB, LightsService.LIGHT_FLASH_TIMED,
                         ledOnMS, ledOffMS);
             }

@@ -581,6 +581,22 @@ public final class Settings {
     @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
     public static final String ACTION_NFCSHARING_SETTINGS =
         "android.settings.NFCSHARING_SETTINGS";
+    
+    /**
+     * Activity Action: Show Anderson settings.
+     * <p>
+     * In some cases, a matching Activity may not exist, so ensure you
+     * safeguard against this.
+     * <p>
+     * Input: Nothing.
+     * <p>
+     * Output: Nothing
+     * 
+     * @hide
+     */
+    @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
+    public static final String ACTION_ANDERSON_SETTINGS =
+        "android.settings.ANDERSON_SETTINGS";
 
     // End of Intent actions for Settings
 
@@ -1882,6 +1898,22 @@ public final class Settings {
          * @hide
          */
         public static final String POINTER_SPEED = "pointer_speed";
+        
+        /**
+         * Pulse light color setting.
+         * This is an int value which represents the color of the pulse light
+         * 
+         * @hide
+         */
+        public static final String NOTIFICATION_PULSE_COLOR = "notification_pulse_color";
+        
+        /**
+         * Pulse light color fallback setting.
+         * This is an int value which represents the color of the pulse light if no setting is found
+         * 
+         * @hide
+         */
+        public static final int NOTIFICATION_PULSE_COLOR_FALLBACK = -1;	// fallback to white if no other color set
 
         /**
          * Setting for using battery percentage drawables
@@ -2028,8 +2060,9 @@ public final class Settings {
             SIP_CALL_OPTIONS,
             SIP_RECEIVE_CALLS,
             POINTER_SPEED,
+            NOTIFICATION_PULSE_COLOR,
         };
-
+        
         // Settings moved to Settings.Secure
 
         /**
