@@ -16,7 +16,7 @@
 
 package com.android.internal.policy.impl;
 
-import android.app.Activity;
+import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -43,9 +43,6 @@ import com.android.internal.R;
 import com.android.internal.app.ShutdownThread;
 import com.android.internal.telephony.TelephonyIntents;
 import com.android.internal.telephony.TelephonyProperties;
-import com.google.android.collect.Lists;
-
-import java.util.ArrayList;
 
 /**
  * Helper to show the global actions dialog.  Each item is an {@link Action} that
@@ -178,6 +175,23 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                     return true;
                 }
             });
+
+        // next: reboot
+        mItems.add(
+                new SinglePressAction(com.android.internal.R.drawable.ic_lock_reboot,
+                        R.string.global_action_reboot) {
+                    public void onPress() {
+                        ShutdownThread.reboot(mContext, "null", true);
+                    }
+
+                    public boolean showDuringKeyguard() {
+                        return true;
+                    }
+
+                    public boolean showBeforeProvisioning() {
+                        return true;
+                    }
+                });
 
         // next: airplane mode
         mItems.add(mAirplaneModeOn);
