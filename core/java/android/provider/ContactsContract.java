@@ -750,6 +750,8 @@ public final class ContactsContract {
         public static final String SYNC3 = "sync3";
         /** Generic column for use by sync adapters. */
         public static final String SYNC4 = "sync4";
+        /** FB Sync. Romanbb and Paul O'Brian */
+        public static final String IS_RESTRICTED = "is_restricted";
     }
 
     /**
