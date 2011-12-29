@@ -378,6 +378,12 @@ public class NotificationManagerService extends INotificationManager.Stub
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NOTIFICATION_PULSE_COLOR), false, this);
             
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NOTIFICATION_PULSE_DURATION), false, this);
+            
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NOTIFICATION_PULSE_FREQUENCY), false, this);
+            
             update();
         }
 
@@ -391,9 +397,18 @@ public class NotificationManagerService extends INotificationManager.Stub
             boolean updatePulse = false;
             boolean pulseEnabled = Settings.System.getInt(resolver,
                         Settings.System.NOTIFICATION_LIGHT_PULSE, 0) != 0;
+            
             int pulseColor = Settings.System.getInt(resolver, 
             										Settings.System.NOTIFICATION_PULSE_COLOR, 
             										Settings.System.NOTIFICATION_PULSE_COLOR_FALLBACK);
+            
+            int pulseDuration = Settings.System.getInt(resolver, 
+													   Settings.System.NOTIFICATION_PULSE_DURATION, 
+													   Settings.System.NOTIFICATION_PULSE_DURATION_FALLBACK);
+            
+            int pulseFrequency = Settings.System.getInt(resolver, 
+														Settings.System.NOTIFICATION_PULSE_FREQUENCY, 
+														Settings.System.NOTIFICATION_PULSE_FREQUENCY_FALLBACK);
             
             if (mNotificationPulseEnabled != pulseEnabled) {
                 mNotificationPulseEnabled = pulseEnabled;
@@ -402,6 +417,16 @@ public class NotificationManagerService extends INotificationManager.Stub
             
             if (mDefaultNotificationColor != pulseColor) {
             	mDefaultNotificationColor = pulseColor;
+            	updatePulse = true;
+            }
+            
+            if (mDefaultNotificationLedOn != pulseDuration) {
+            	mDefaultNotificationLedOn = pulseDuration;
+            	updatePulse = true;
+            }
+            
+            if (mDefaultNotificationLedOff != pulseFrequency) {
+            	mDefaultNotificationLedOff = pulseFrequency;
             	updatePulse = true;
             }
             
@@ -435,12 +460,14 @@ public class NotificationManagerService extends INotificationManager.Stub
         												   Settings.System.NOTIFICATION_PULSE_COLOR, 
         												   Settings.System.NOTIFICATION_PULSE_COLOR_FALLBACK);
         
+        mDefaultNotificationLedOn = Settings.System.getInt(mContext.getContentResolver(), 
+														   Settings.System.NOTIFICATION_PULSE_DURATION, 
+														   Settings.System.NOTIFICATION_PULSE_DURATION_FALLBACK);
         
-        
-        mDefaultNotificationLedOn = resources.getInteger(
-                com.android.internal.R.integer.config_defaultNotificationLedOn);
-        mDefaultNotificationLedOff = resources.getInteger(
-                com.android.internal.R.integer.config_defaultNotificationLedOff);
+        mDefaultNotificationLedOff = Settings.System.getInt(mContext.getContentResolver(), 
+														   Settings.System.NOTIFICATION_PULSE_FREQUENCY, 
+														   Settings.System.NOTIFICATION_PULSE_FREQUENCY_FALLBACK);
+
 
         // Don't start allowing notifications until the setup wizard has run once.
         // After that, including subsequent boots, init with notifications turned on.

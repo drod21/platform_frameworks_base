@@ -1916,6 +1916,38 @@ public final class Settings {
         public static final int NOTIFICATION_PULSE_COLOR_FALLBACK = -1;	// fallback to white if no other color set
 
         /**
+         * Pulse light duration setting.
+         * This is an int value which represents the milliseconds the pulse should flash
+         * 
+         * @hide
+         */
+        public static final String NOTIFICATION_PULSE_DURATION = "notification_pulse_duration";
+        
+        /**
+         * Pulse light duration fallback setting.
+         * This is an int value which represents the milliseconds the pulse should flash
+         * 
+         * @hide
+         */
+        public static final int NOTIFICATION_PULSE_DURATION_FALLBACK = 500;	// fallback to 500ms
+        
+        /**
+         * Pulse light frequency setting.
+         * This is an int value which represents the milliseconds between pulses
+         * 
+         * @hide
+         */
+        public static final String NOTIFICATION_PULSE_FREQUENCY = "notification_pulse_frequency";
+        
+        /**
+         * Pulse light duration fallback setting.
+         * This is an int value which represents the milliseconds between pulses
+         * 
+         * @hide
+         */
+        public static final int NOTIFICATION_PULSE_FREQUENCY_FALLBACK = 7000;	// fallback to 7000ms
+
+        /**
          * Setting for using battery percentage drawables
          * @hide
          */
