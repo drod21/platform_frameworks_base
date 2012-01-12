@@ -1059,13 +1059,18 @@ public class PhoneStatusBar extends StatusBar {
 
     public void showClock(boolean show) {
         View clock = mStatusBarView.findViewById(R.id.clock);
-        mShowClock = (Settings.System.getInt(mContext.getContentResolver(),
-            Settings.System.STATUS_BAR_CLOCK, 1) == 1);
+        View cclock = mStatusBarView.findViewById(R.id.clockcenter);
+        mShowClock = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUS_BAR_CLOCK, 1) == 1);
+        mShowCenterClock = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUS_BAR_CLOCK, 1) == 2);
         if (mShowClock && show) {
             clock.setVisibility(View.VISIBLE);
+        } else if (mShowCenterClock && show) {
+            cclock.setVisibility(View.VISIBLE);
         } else {
             clock.setVisibility(View.GONE);
+            cclock.setVisibility(View.GONE);
         }
+
     }
 
     /**
