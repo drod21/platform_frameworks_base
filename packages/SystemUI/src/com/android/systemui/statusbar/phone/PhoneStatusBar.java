@@ -228,6 +228,7 @@ public class PhoneStatusBar extends StatusBar {
     int mDisabled = 0;
 
     private boolean mShowClock;
+    private boolean mShowCenterClock;
 
     // tracking calls to View.setSystemUiVisibility()
     int mSystemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
