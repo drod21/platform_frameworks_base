@@ -2084,6 +2084,18 @@ public final class Settings {
         public static final String NAVIGATION_BUTTON_COLOR = "navigation_button_color";
 
         /**
+         * Setting for lockscreen type
+         * @hide
+         */
+        public static final String LOCKSCREEN_TARGETS = "lockscreen_targets";
+
+        /**
+         * Setting to center lockscreen
+         * @hide
+         */
+        public static final String CENTER_LOCKSCREEN = "center_lockscreen";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

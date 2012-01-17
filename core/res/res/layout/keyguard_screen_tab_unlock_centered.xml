@@ -31,8 +31,7 @@
     <com.android.internal.widget.DigitalClock android:id="@+id/time"
         android:layout_marginTop="@dimen/keyguard_lockscreen_status_line_clockfont_top_margin"
         android:layout_marginBottom="12dip"
-        android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin"
-        android:layout_gravity="right">
+        android:layout_gravity="center_horizontal">
 
         <!-- Because we can't have multi-tone fonts, we render two TextViews, one on
         top of the other. Hence the redundant layout... -->
@@ -64,8 +63,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_gravity="right"
-        android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin">
+        android:layout_gravity="center_horizontal">
 
         <TextView
             android:id="@+id/date"
@@ -93,28 +91,12 @@
 
     <TextView
         android:id="@+id/status1"
-        android:layout_gravity="right"
-        android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin"
+        android:layout_gravity="center_horizontal"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/keyguard_lockscreen_status_line_font_size"
         android:drawablePadding="4dip"
-        />
-
-        <com.android.internal.policy.impl.LockTextSMS
-            android:id="@+id/locksms"             
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-	    android:layout_centerHorizontal="true"
-            android:lines="2"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/keyguard_lockscreen_status_line_font_size"
-            android:drawablePadding="4dip"
-            android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin"
-            android:layout_marginLeft="@dimen/keyguard_lockscreen_status_line_font_right_margin"
         />
 
     <Space android:layout_gravity="fill" />
@@ -125,8 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dip"
-        android:layout_marginRight="16dip"
-        android:layout_gravity="right"
+        android:layout_gravity="center_horizontal"
         android:drawableLeft="@*android:drawable/lockscreen_emergency_button"
         style="?android:attr/buttonBarButtonStyle"
         android:drawablePadding="4dip"

@@ -98,6 +98,10 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
     private KeyguardStatusViewManager mStatusViewManager;
     private UnlockWidgetCommonMethods mUnlockWidgetMethods;
     private View mUnlockWidget;
+    private int mLockscreenType = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_TARGETS, 0));
+    private boolean mCenteredLockscreen = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.CENTER_LOCKSCREEN, 0) == 1);
+    private int lockscreenLayout;
+    private int lockscreenLayoutLand;
 
     private interface UnlockWidgetCommonMethods {
         // Update resources based on phone state
@@ -233,12 +237,31 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
 
         public void updateResources() {
             int resId;
-            if (mCameraDisabled) {
-                // Fall back to showing ring/silence if camera is disabled by DPM...
-                resId = mSilentMode ? R.array.lockscreen_targets_when_silent
-                    : R.array.lockscreen_targets_when_soundon;
-            } else {
-                resId = R.array.lockscreen_targets_with_camera;
+            switch (mLockscreenType) {
+                case 1:
+                    resId = mSilentMode ? R.array.lockscreen_targets_when_silent : R.array.lockscreen_targets_when_soundon;
+                    break;
+                case 2:
+                    resId = R.array.lockscreen_targets_three_messaging;
+                    break;
+                case 3:
+                    resId = mSilentMode ? R.array.lockscreen_targets_three_messaging_silent : R.array.lockscreen_targets_three_messaging_soundon;
+                    break;
+                case 4:
+                    resId = R.array.lockscreen_targets_three_phone;
+                    break;
+                case 5:
+                    resId = mSilentMode ? R.array.lockscreen_targets_three_phone_silent : R.array.lockscreen_targets_three_phone_soundon;
+                    break;
+                case 6:
+                    resId = R.array.lockscreen_targets_quad_messaging_phone;
+                    break;
+                case 7:
+                    resId = mSilentMode ? R.array.lockscreen_targets_quad_messaging_phone_silent : R.array.lockscreen_targets_quad_messaging_phone_soundon;
+                    break;
+                default:
+                case 0:
+                    resId = R.array.lockscreen_targets_with_camera;
             }
             mMultiWaveView.setTargetResources(resId);
         }
@@ -252,35 +275,111 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
         }
 
         public void onTrigger(View v, int target) {
-            if (target == 0) { // right Action = Unlock
-                mCallback.goToUnlockScreen();
-            } else if (target == 1) { // up Action == Mms
-                Intent mmsIntent = new Intent(Intent.ACTION_MAIN);
-                mmsIntent.setClassName("com.android.mms",
-                        "com.android.mms.ui.ConversationList");
-                mmsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(mmsIntent);
-                mCallback.goToUnlockScreen();
-            } else if (target == 2) { // left Action = Phone
-                Intent phoneIntent = new Intent(Intent.ACTION_MAIN);
-                phoneIntent.setClassName("com.android.contacts",
-                        "com.android.contacts.activities.DialtactsActivity");
-                phoneIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(phoneIntent);
-                mCallback.goToUnlockScreen();
-            } else if (target == 3) {
-                if (!mCameraDisabled) {
-                    // Start the Camera
-                    Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
-                    mCallback.goToUnlockScreen();
-                } else {
-                    toggleRingMode();
-                    mUnlockWidgetMethods.updateResources();
-                    mCallback.pokeWakelock();
-                }
+            switch(mLockscreenType) {
+                case 1:
+                    if (target == 0 || target == 1) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 2 || target == 3) {
+                        getSound();
+                    }
+                    break;
+                case 2:
+                    if (target == 0) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 1) {
+                        getSms();
+                    } else if (target == 2 || target == 3) {
+                        getCamera();
+                    }
+                    break;
+                case 3:
+                    if (target == 0) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 1) {
+                        getSms();
+                    } else if (target == 2 || target == 3) {
+                        getSound();
+                    }
+                    break;
+                case 4:
+                    if (target == 0) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 1) {
+                        getPhone();
+                    } else if (target == 2 || target == 3) {
+                        getCamera();
+                    }
+                    break;
+                case 5:
+                    if (target == 0) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 1) {
+                        getPhone();
+                    } else if (target == 2 || target == 3) {
+                        getSound();
+                    }
+                    break;
+                case 6:
+                    if (target == 0) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 1) {
+                        getSms();
+                    } else if (target == 2) {
+                        getPhone();
+                    } else if (target == 3) {
+                        getCamera();
+                    }
+                    break;
+                case 7:
+                    if (target == 0) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 1) {
+                        getSms();
+                    } else if (target == 2) {
+                        getPhone();
+                    } else if (target == 3) {
+                        getSound();
+                    }
+                    break;
+                default:
+                case 0:
+                    if (target == 0 || target == 1) {
+                        mCallback.goToUnlockScreen();
+                    } else if (target == 2 || target == 3) {
+                        getCamera();
+                    }
+                    break;
             }
+        }
+
+        public void getSound() {
+            toggleRingMode();
+            mUnlockWidgetMethods.updateResources();
+            mCallback.pokeWakelock();
+        }
+
+        public void getPhone() {
+            Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
+            phoneIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            phoneIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(phoneIntent);
+            mCallback.goToUnlockScreen();
+        }
+
+        public void getSms() {
+            Intent mmsIntent = new Intent(Intent.ACTION_MAIN);
+            mmsIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            mmsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mmsIntent.setType("vnd.android-dir/mms-sms");
+            mContext.startActivity(mmsIntent);
+            mCallback.goToUnlockScreen();
+        }
+
+        public void getCamera() {
+            Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            mCallback.goToUnlockScreen();
         }
 
         public void onGrabbedStateChange(View v, int handle) {
@@ -373,12 +472,20 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
                     + " res orient=" + context.getResources().getConfiguration().orientation);
         }
 
+        if (mCenteredLockscreen) {
+            lockscreenLayout = R.layout.keyguard_screen_tab_unlock_centered;
+            lockscreenLayoutLand = R.layout.keyguard_screen_tab_unlock_centered_land;
+        } else {
+            lockscreenLayout = R.layout.keyguard_screen_tab_unlock;
+            lockscreenLayoutLand = R.layout.keyguard_screen_tab_unlock_land;
+        }
+
         final LayoutInflater inflater = LayoutInflater.from(context);
         if (DBG) Log.v(TAG, "Creation orientation = " + mCreationOrientation);
         if (mCreationOrientation != Configuration.ORIENTATION_LANDSCAPE) {
-            inflater.inflate(R.layout.keyguard_screen_tab_unlock, this, true);
+            inflater.inflate(lockscreenLayout, this, true);
         } else {
-            inflater.inflate(R.layout.keyguard_screen_tab_unlock_land, this, true);
+            inflater.inflate(lockscreenLayoutLand, this, true);
         }
 
 	mLockSMS = (LockTextSMS) findViewById(R.id.locksms);
