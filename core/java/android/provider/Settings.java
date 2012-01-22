@@ -1890,6 +1890,13 @@ public final class Settings {
         public static final String USE_QUICK_DASH = "use_quick_dash";
 
         /**
+         * Toggle setting for LTE - CM
+         * 1 - LTE on, 0 - LTE off
+         * @hide
+         */
+        public static final String LTE_MODE = "lte_mode";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
