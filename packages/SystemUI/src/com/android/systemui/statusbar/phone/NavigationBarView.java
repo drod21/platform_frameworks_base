@@ -503,7 +503,7 @@ public class NavigationBarView extends LinearLayout {
                 threeView.setImageResource(isPortrait ? mBackImg : mBackImgLand);
                 break;
             case 3:
-                threeView.setTag("recent_apps");
+                threeView.setTag("recent");
                 threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_recent));
                 threeView.setMCode(0);
                 threeView.setImageResource(isPortrait ? mRecentImg : mRecentImgLand);
