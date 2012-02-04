@@ -1830,6 +1830,8 @@
     <string name="lockscreen_charged">Charged.</string>
     <!-- A short representation of charging information, e.g "34%" -->
     <string name="lockscreen_battery_short"><xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
+    <!-- Showing the Battery % while not plugged in. -->
+    <string name="lockscreen_always_battery">Battery, <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
 
     <!-- When the lock screen is showing and the battery is low, warn user to plug
          in the phone soon. -->
