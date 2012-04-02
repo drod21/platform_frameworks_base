@@ -1884,6 +1884,11 @@ public final class Settings {
         public static final String POINTER_SPEED = "pointer_speed";
 
         /**
+         * Setting for using battery percentage drawables
+         * @hide
+         */
+        public static final String BATTERY_PERCENTAGES = "battery_percentages";
+	/**
          * Setting to use quickdash as long press home
          * @hide
          */
@@ -1895,7 +1900,6 @@ public final class Settings {
          * @hide
          */
         public static final String LTE_MODE = "lte_mode";
-
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.

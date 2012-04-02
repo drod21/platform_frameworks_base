@@ -24,9 +24,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.ContentObserver;
 import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.FileUtils;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.DropBoxManager;
 import android.os.RemoteException;
@@ -124,6 +126,8 @@ class BatteryService extends Binder {
     private Led mLed;
 
     private boolean mSentLowBatteryBroadcast = false;
+    private boolean mUseBattPercentages;
+    private Handler mHandler;
 
     public BatteryService(Context context, LightsService lights) {
         mContext = context;
@@ -144,8 +148,30 @@ class BatteryService extends Binder {
             mInvalidChargerObserver.startObserving("DEVPATH=/devices/virtual/switch/invalid_charger");
         }
 
+        mUseBattPercentages = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.BATTERY_PERCENTAGES, 0) == 1);
+
+        mHandler = new Handler();
+        SettingsObserver settingsObserver = new SettingsObserver(mHandler);
+        settingsObserver.observe();
+
         // set initial status
         update();
+    }
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.BATTERY_PERCENTAGES), false, this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
     }
 
     final boolean isPowered() {
@@ -601,6 +627,12 @@ class BatteryService extends Binder {
                 mBatteryLight.turnOff();
             }
         }
+    }
+
+    private void updateSettings() {
+        ContentResolver resolver = mContext.getContentResolver();
+        mUseBattPercentages = (Settings.System.getInt(resolver, Settings.System.BATTERY_PERCENTAGES, 0) == 1);
+        sendIntent();
     }
 }
 
