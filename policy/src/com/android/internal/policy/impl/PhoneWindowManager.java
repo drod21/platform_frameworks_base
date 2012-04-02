@@ -344,6 +344,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     PointerLocationView mPointerLocationView = null;
     InputChannel mPointerLocationInputChannel;
 
+    boolean mUseQuickDash;
+
     // The last window we were told about in focusChanged.
     WindowState mFocusedWindow;
     IApplicationToken mFocusedApp;
@@ -488,6 +490,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.Secure.DEFAULT_INPUT_METHOD), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     "fancy_rotation_anim"), false, this);
+
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.USE_QUICK_DASH), false, this);
             updateSettings();
         }
 
@@ -698,14 +703,19 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mHomePressed = false;
         }
 
-        if (mLongPressOnHomeBehavior == LONG_PRESS_HOME_RECENT_DIALOG) {
+        if (mLongPressOnHomeBehavior == LONG_PRESS_HOME_RECENT_DIALOG  && !mUseQuickDash) {
             showOrHideRecentAppsDialog(RECENT_APPS_BEHAVIOR_SHOW_OR_DISMISS);
-        } else if (mLongPressOnHomeBehavior == LONG_PRESS_HOME_RECENT_SYSTEM_UI) {
+        } else if (mLongPressOnHomeBehavior == LONG_PRESS_HOME_RECENT_SYSTEM_UI && !mUseQuickDash) {
             try {
                 mStatusBarService.toggleRecentApps();
             } catch (RemoteException e) {
                 Slog.e(TAG, "RemoteException when showing recent apps", e);
             }
+        } else if (mUseQuickDash) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClassName("com.android.quickdash", "com.android.quickdash.QuickDash");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
         }
     }
 
@@ -919,6 +929,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_DEFAULT);
             int accelerometerDefault = Settings.System.getInt(resolver,
                     Settings.System.ACCELEROMETER_ROTATION, DEFAULT_ACCELEROMETER_ROTATION);
+            mUseQuickDash = (Settings.System.getInt(resolver,
+                    Settings.System.USE_QUICK_DASH, 0) == 1);
             
             // set up rotation lock state
             mUserRotationMode = (accelerometerDefault == 0)

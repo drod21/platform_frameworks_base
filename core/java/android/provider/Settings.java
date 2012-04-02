@@ -1884,6 +1884,12 @@ public final class Settings {
         public static final String POINTER_SPEED = "pointer_speed";
 
         /**
+         * Setting to use quickdash as long press home
+         * @hide
+         */
+        public static final String USE_QUICK_DASH = "use_quick_dash";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
