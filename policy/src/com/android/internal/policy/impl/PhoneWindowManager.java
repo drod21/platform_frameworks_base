@@ -490,7 +490,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.Secure.DEFAULT_INPUT_METHOD), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     "fancy_rotation_anim"), false, this);
-
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.USE_QUICK_DASH), false, this);
             updateSettings();
@@ -930,7 +929,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             int accelerometerDefault = Settings.System.getInt(resolver,
                     Settings.System.ACCELEROMETER_ROTATION, DEFAULT_ACCELEROMETER_ROTATION);
             mUseQuickDash = (Settings.System.getInt(resolver,
-                    Settings.System.USE_QUICK_DASH, 0) == 1);
+                    Settings.System.USE_QUICK_DASH, 1) == 1);
             
             // set up rotation lock state
             mUserRotationMode = (accelerometerDefault == 0)
