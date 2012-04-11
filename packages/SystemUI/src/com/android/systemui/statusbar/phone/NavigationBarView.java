@@ -62,7 +62,6 @@ public class NavigationBarView extends LinearLayout {
     private boolean mShowSearchButton;
     private boolean isPortrait;
     private int mLightsOut;
-    private Handler mHandler;
 
     protected IStatusBarService mBarService;
     final Display mDisplay;
