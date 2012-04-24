@@ -1901,37 +1901,6 @@ public final class Settings {
          */
         public static final String LTE_MODE = "lte_mode";
         /**
-         * Whether to show the battery bar
-         * @hide
-         */
-        public static final String STATUSBAR_BATTERY_BAR = "statusbar_battery_bar";
-
-        /**
-         * Statusbar battery bar color
-         * @hide
-         */
-        public static final String STATUSBAR_BATTERY_BAR_COLOR = "statusbar_battery_bar_color";
-
-        /**
-         * Statusbar battery bar thickness
-         * @hide
-         */
-        public static final String STATUSBAR_BATTERY_BAR_THICKNESS = "statusbar_battery_bar_thickness";
-
-        /**
-         * 0 = regular
-         * 1 = mirrored from center
-         * @hide
-         */
-        public static final String STATUSBAR_BATTERY_BAR_STYLE = "statusbar_battery_bar_style";
-
-        /**
-         * Whether to show charging animation
-         * @hide
-         */
-        public static final String STATUSBAR_BATTERY_BAR_ANIMATE = "statusbar_battery_bar_animate";
-
-        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
