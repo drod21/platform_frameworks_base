@@ -23,21 +23,44 @@ import com.android.internal.widget.WaveView;
 import com.android.internal.widget.multiwaveview.MultiWaveView;
 
 import android.app.ActivityManager;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.PixelFormat;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.util.Log;
 import android.media.AudioManager;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * The screen within {@link LockPatternKeyguardView} that shows general
@@ -53,9 +76,16 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
     private static final int WAIT_FOR_ANIMATION_TIMEOUT = 0;
     private static final int STAY_ON_WHILE_GRABBED_TIMEOUT = 30000;
 
-    private LockPatternUtils mLockPatternUtils;
-    private KeyguardUpdateMonitor mUpdateMonitor;
-    private KeyguardScreenCallback mCallback;
+	private LockPatternUtils mLockPatternUtils;
+	private KeyguardUpdateMonitor mUpdateMonitor;
+	private KeyguardScreenCallback mCallback;
+	private LockTextSMS mLockSMS;
+    
+    // Fling a ding ding
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private final GestureDetector gestureDetector = new GestureDetector(new GestureListener());
 
     // current configuration state of keyboard and display
     private int mKeyboardHidden;
@@ -351,6 +381,18 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
             inflater.inflate(R.layout.keyguard_screen_tab_unlock_land, this, true);
         }
 
+	mLockSMS = (LockTextSMS) findViewById(R.id.locksms);
+
+        final OnTouchListener flingSMS = new OnTouchListener() {
+        	@Override
+            public boolean onTouch(final View view, final MotionEvent event) {
+        		gestureDetector.onTouchEvent(event);
+                return true;
+            }        	
+        };
+
+        mLockSMS.setOnTouchListener(flingSMS);
+
         mStatusViewManager = new KeyguardStatusViewManager(this, mUpdateMonitor, mLockPatternUtils,
                 mCallback, false);
 
@@ -485,4 +527,73 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
 
     public void onPhoneStateChanged(String newState) {
     }
+
+    class GestureListener extends SimpleOnGestureListener {
+    	@Override  
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+    		if (mSMSApp == null) {
+    			Intent i = new Intent(Intent.ACTION_MAIN);
+            	i.setClassName("com.android.mms", "com.android.mms.ui.ConversationList");
+            	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            	mContext.startActivity(i);
+            	mCallback.goToUnlockScreen();
+            	mLockSMS.setVisibility(View.GONE);
+            	Settings.System.putInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1);
+    		} else {
+    			runActivity(mSMSApp);
+    		}
+			return true;  
+		}
+    	
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
+                // right to left swipe
+                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	Animation anim = AnimationUtils.makeOutAnimation(getContext(), false);
+            		anim.setDuration(300);
+            		anim.setAnimationListener(new AnimationListener() {
+            			@Override
+            			public void onAnimationEnd(Animation animation) {
+            				mLockSMS.setVisibility(View.GONE);
+            				Settings.System.putInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1);
+            			}
+            			@Override
+            			public void onAnimationStart(Animation animation) {
+            				
+            			}
+            			@Override
+            			public void onAnimationRepeat(Animation animation) {
+            				
+            			}
+            		});
+            		mLockSMS.startAnimation(anim);
+                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	Animation anim = AnimationUtils.makeOutAnimation(getContext(), true);
+            		anim.setDuration(300);
+            		anim.setAnimationListener(new AnimationListener() {
+            			@Override
+            			public void onAnimationEnd(Animation animation) {
+            				mLockSMS.setVisibility(View.GONE);
+            				Settings.System.putInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1);
+            			}
+            			@Override
+            			public void onAnimationStart(Animation animation) {
+            				
+            			}
+            			@Override
+            			public void onAnimationRepeat(Animation animation) {
+            				
+            			}
+            		});
+            		mLockSMS.startAnimation(anim);
+                }
+            } catch (Exception e) {
+            }
+            return false;
+        }
+}
+
 }
