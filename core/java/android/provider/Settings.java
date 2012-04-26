@@ -2046,16 +2046,34 @@ public final class Settings {
         public static final String HIDE_CLOCK = "hide_clock";
 
         /**
-         * Setting to show full menu button in nav bar
+         * Setting for which key to use in slot one (furthest left)
          * @hide
          */
-        public static final String SHOW_MENU_BUTTON = "show_menu_button";
+        public static final String NAV_BUTTONS_SLOT_ONE = "nav_buttons_slot_one";
 
         /**
-         * Setting to show search button in nav bar
+         * Setting for which key to use in slot two.
          * @hide
          */
-        public static final String SHOW_SEARCH_BUTTON = "show_search_button";
+        public static final String NAV_BUTTONS_SLOT_TWO = "nav_buttons_slot_two";
+
+        /**
+         * Setting for which key to use in slot three
+         * @hide
+         */
+        public static final String NAV_BUTTONS_SLOT_THREE = "nav_buttons_slot_three";
+
+        /**
+         * Setting for which key to use in slot four
+         * @hide
+         */
+        public static final String NAV_BUTTONS_SLOT_FOUR = "nav_buttons_slot_four";
+
+        /**
+         * Setting for which key to use in slot five (furthest right)
+         * @hide
+         */
+        public static final String NAV_BUTTONS_SLOT_FIVE = "nav_buttons_slot_five";
 
         /**
 

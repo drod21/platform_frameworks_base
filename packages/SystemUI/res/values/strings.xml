@@ -202,7 +202,10 @@
     <string name="accessibility_recent">Recent apps</string>
     <!-- Content description of the search button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
     <string name="accessibility_search">Search</string>
-
+    <!-- Content description of the media previous button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_media_previous">Media previous</string>
+    <!-- Content description of the media next button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_media_next">Media next</string>
     <!-- Content description of the switch input method button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
     <string name="accessibility_ime_switch_button">Switch input method button.</string>
     <!-- Content description of the compatibility zoom button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->

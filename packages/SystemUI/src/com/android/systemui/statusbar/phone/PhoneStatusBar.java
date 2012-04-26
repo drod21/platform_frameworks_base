@@ -389,8 +389,12 @@ public class PhoneStatusBar extends StatusBar {
 
         public void observe() {
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.SHOW_MENU_BUTTON), false, this);
-            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.SHOW_SEARCH_BUTTON), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_ONE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_TWO), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_THREE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_FOUR), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_FIVE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.USE_ALT_ICONS), false, this);
             onChange(true);
         }
 
@@ -470,8 +474,12 @@ public class PhoneStatusBar extends StatusBar {
     private void prepareNavigationBarView() {
         mNavigationBarView.reorient();
 
-        mNavigationBarView.getRecentsButton().setOnClickListener(mRecentsClickListener);
-        mNavigationBarView.getRecentsButton().setOnTouchListener(mRecentsPanel);
+        try {
+            mNavigationBarView.getRecentsButton().setOnClickListener(mRecentsClickListener);
+            mNavigationBarView.getRecentsButton().setOnTouchListener(mRecentsPanel);
+        } catch (NullPointerException e) {
+            // just in case the layout has no recents button ---romanbb
+        };
     }
 
     // For small-screen devices (read: phones) that lack hardware navigation buttons
