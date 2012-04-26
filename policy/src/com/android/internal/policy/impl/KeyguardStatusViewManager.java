@@ -69,6 +69,7 @@ class KeyguardStatusViewManager implements OnClickListener {
     private TextView mCarrierView;
     private TextView mDateView;
     private TextView mStatus1View;
+    private TextView mStatus2View;
     private TextView mOwnerInfoView;
     private TextView mAlarmStatusView;
     private TransportControlView mTransportView;
@@ -105,6 +106,8 @@ class KeyguardStatusViewManager implements OnClickListener {
     private CharSequence mPlmn;
     private CharSequence mSpn;
     protected int mPhoneState;
+
+    private boolean mAlwaysShowBattInfo;
 
     private class TransientTextManager {
         private TextView mTextView;
@@ -176,6 +179,7 @@ class KeyguardStatusViewManager implements OnClickListener {
         mCarrierView = (TextView) findViewById(R.id.carrier);
         mDateView = (TextView) findViewById(R.id.date);
         mStatus1View = (TextView) findViewById(R.id.status1);
+        mStatus2View = (TextView) findViewById(R.id.status2);
         mAlarmStatusView = (TextView) findViewById(R.id.alarm_status);
         mOwnerInfoView = (TextView) findViewById(R.id.propertyOf);
         mTransportView = (TransportControlView) findViewById(R.id.transport);
@@ -203,7 +207,7 @@ class KeyguardStatusViewManager implements OnClickListener {
         updateOwnerInfo();
 
         // Required to get Marquee to work.
-        final View scrollableViews[] = { mCarrierView, mDateView, mStatus1View, mOwnerInfoView,
+        final View scrollableViews[] = { mCarrierView, mDateView, mStatus1View, mStatus2View, mOwnerInfoView,
                 mAlarmStatusView };
         for (View v : scrollableViews) {
             if (v != null) {
@@ -316,6 +320,7 @@ class KeyguardStatusViewManager implements OnClickListener {
         updateAlarmInfo();
         updateOwnerInfo();
         updateStatus1();
+        updateStatus2();
         updateCarrierText();
     }
 
@@ -351,6 +356,16 @@ class KeyguardStatusViewManager implements OnClickListener {
         }
     }
 
+    private void updateStatus2() {
+        if (mStatus2View != null) {
+            MutableInt icon = new MutableInt(0);
+            CharSequence string = getSecondPriorityTextMessage(icon);
+            mStatus2View.setText(string);
+            mStatus2View.setCompoundDrawablesWithIntrinsicBounds(icon.value, 0, 0, 0);
+            mStatus2View.setVisibility(mShowingStatus ? View.VISIBLE : View.INVISIBLE);
+        }
+    }
+
     private void updateCarrierText() {
         if (!inWidgetMode() && mCarrierView != null) {
             mCarrierView.setText(mCarrierText);
@@ -361,7 +376,8 @@ class KeyguardStatusViewManager implements OnClickListener {
         // If we have replaced the status area with a single widget, then this code
         // prioritizes what to show in that space when all transient messages are gone.
         CharSequence string = null;
-        if (mShowingBatteryInfo) {
+        mAlwaysShowBattInfo = (Settings.System.getInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_ALWAYS_BATTERY, 0) == 1);
+        if (mShowingBatteryInfo || mAlwaysShowBattInfo) {
             // Battery status
             if (mPluggedIn) {
                 // Charging or charged
@@ -384,11 +400,12 @@ class KeyguardStatusViewManager implements OnClickListener {
 
     private CharSequence getPriorityTextMessage(MutableInt icon) {
         CharSequence string = null;
+        mAlwaysShowBattInfo = (Settings.System.getInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_ALWAYS_BATTERY, 0) == 1);
         if (!TextUtils.isEmpty(mInstructionText)) {
             // Instructions only
             string = mInstructionText;
             icon.value = LOCK_ICON;
-        } else if (mShowingBatteryInfo) {
+        } else if (mShowingBatteryInfo || mAlwaysShowBattInfo) {
             // Battery status
             if (mPluggedIn) {
                 // Charging or charged
@@ -406,6 +423,19 @@ class KeyguardStatusViewManager implements OnClickListener {
         } else if (!inWidgetMode() && mOwnerInfoView == null && mOwnerInfoText != null) {
             // OwnerInfo shows in status if we don't have a dedicated widget
             string = mOwnerInfoText;
+        }
+        return string;
+    }
+
+    private CharSequence getSecondPriorityTextMessage(MutableInt icon) {
+        CharSequence string = null;
+        mAlwaysShowBattInfo = (Settings.System.getInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_ALWAYS_BATTERY, 0) == 1);
+        if (mShowingBatteryInfo || mAlwaysShowBattInfo) {
+            if (!inWidgetMode() && mOwnerInfoView == null && mOwnerInfoText != null) {
+                string = mOwnerInfoText;
+            }
+        } else {
+            string = null;
         }
         return string;
     }

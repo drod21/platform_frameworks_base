@@ -28,6 +28,7 @@ import android.os.BatteryManager;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Slog;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,12 +42,14 @@ public class BatteryController extends BroadcastReceiver {
     private ArrayList<TextView> mLabelViews = new ArrayList<TextView>();
     private int mBattIcon;
     private boolean mUseBattPercentages;
+    private boolean mHideBattery;
     private Handler mHandler;
 
     public BatteryController(Context context) {
         mContext = context;
 
-        mUseBattPercentages = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.BATTERY_PERCENTAGES, 0) ==1);
+        mUseBattPercentages = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.BATTERY_PERCENTAGES, 0) == 1);
+        mHideBattery = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.HIDE_BATTERY, 0) == 1);
 
         mHandler = new Handler();
         SettingsObserver settingsObserver = new SettingsObserver(mHandler);
@@ -64,6 +67,7 @@ public class BatteryController extends BroadcastReceiver {
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.BATTERY_PERCENTAGES), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.HIDE_BATTERY), false, this);
         }
 
         @Override
@@ -99,6 +103,11 @@ public class BatteryController extends BroadcastReceiver {
                 v.setImageLevel(level);
                 v.setContentDescription(mContext.getString(R.string.accessibility_battery_level,
                         level));
+                if (mHideBattery) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.setVisibility(View.VISIBLE);
+                }
             }
             N = mLabelViews.size();
             for (int i=0; i<N; i++) {
@@ -112,5 +121,6 @@ public class BatteryController extends BroadcastReceiver {
     private void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
         mUseBattPercentages = (Settings.System.getInt(resolver, Settings.System.BATTERY_PERCENTAGES, 0) == 1);
+        mHideBattery = (Settings.System.getInt(resolver, Settings.System.HIDE_BATTERY, 0) == 1);
     }
 }

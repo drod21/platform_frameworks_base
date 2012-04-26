@@ -2103,6 +2103,18 @@ public final class Settings {
         public static final String USE_QUICK_DASH = "use_quick_dash";
 
         /**
+         * Setting for lockscreen battery percentage
+         * @hide
+         */
+        public static final String LOCKSCREEN_ALWAYS_BATTERY = "lockscreen_always_battery";
+
+        /**
+         * Setting for hide battery icon
+         * @hide
+         */
+        public static final String HIDE_BATTERY = "hide_battery";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
