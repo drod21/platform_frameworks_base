@@ -1952,11 +1952,6 @@ public final class Settings {
          * @hide
          */
         public static final String BATTERY_PERCENTAGES = "battery_percentages";
-	/**
-         * Setting to use quickdash as long press home
-         * @hide
-         */
-        public static final String USE_QUICK_DASH = "use_quick_dash";
 
         /**
          * Toggle setting for LTE - CM
@@ -2100,6 +2095,12 @@ public final class Settings {
          * @hide
          */
         public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
+
+        /**
+         * Setting to use quickdash as long press home
+         * @hide
+         */
+        public static final String USE_QUICK_DASH = "use_quick_dash";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
