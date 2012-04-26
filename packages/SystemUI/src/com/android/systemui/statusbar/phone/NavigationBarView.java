@@ -18,12 +18,18 @@ package com.android.systemui.statusbar.phone;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.graphics.Rect;
 import android.os.Handler;
+<<<<<<< HEAD
 import android.os.Message;
+=======
+>>>>>>> c998e14... Customizable navbar. Search/Menu options. Layouts for each combination.
 import android.os.ServiceManager;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.animation.AccelerateInterpolator;
@@ -40,6 +46,7 @@ import java.io.PrintWriter;
 import java.lang.StringBuilder;
 
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.systemui.statusbar.policy.KeyButtonView;
 
 import com.android.systemui.R;
 
@@ -52,6 +59,11 @@ public class NavigationBarView extends LinearLayout {
     final static boolean NAVBAR_ALWAYS_AT_RIGHT = true;
 
     final static boolean ANIMATE_HIDE_TRANSITION = false; // turned off because it introduces unsightly delay when videos goes to full screen
+
+    private boolean mShowMenuButton;
+    private boolean mShowSearchButton;
+    private int mLightsOut;
+    private Handler mHandler;
 
     protected IStatusBarService mBarService;
     final Display mDisplay;
@@ -109,6 +121,34 @@ public class NavigationBarView extends LinearLayout {
         return mCurrentView.findViewById(R.id.home);
     }
 
+    public View getSearchButton() {
+        return mCurrentView.findViewById(R.id.search);
+    }
+
+    public View getMenuStock() {
+        return mCurrentView.findViewById(R.id.menu_stock);
+    }
+
+    public View getOutsideSpacerSmall() {
+        return mCurrentView.findViewById(R.id.outside_spacer_small);
+    }
+
+    public View getOutsideSpacer() {
+        return mCurrentView.findViewById(R.id.outside_spacer);
+    }
+
+    public View getInsideSpacerOne() {
+        return mCurrentView.findViewById(R.id.inside_spacer_one);
+    }
+
+    public View getInsideSpacerTwo() {
+        return mCurrentView.findViewById(R.id.inside_spacer_two);
+    }
+
+    public View getMenuSpacer() {
+        return mCurrentView.findViewById(R.id.menu_spacer);
+    }
+
     public NavigationBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -159,6 +199,18 @@ public class NavigationBarView extends LinearLayout {
         getBackButton()   .setVisibility(disableBack       ? View.INVISIBLE : View.VISIBLE);
         getHomeButton()   .setVisibility(disableHome       ? View.INVISIBLE : View.VISIBLE);
         getRecentsButton().setVisibility(disableRecent     ? View.INVISIBLE : View.VISIBLE);
+
+        if (mShowSearchButton) {
+            getSearchButton().setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
+        } else {
+            getSearchButton().setVisibility(View.GONE);
+        }
+
+        if (mShowMenuButton) {
+            getMenuButton().setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
+        } else {
+            getMenuButton().setVisibility(View.GONE);
+        }
     }
 
     public void setMenuVisibility(final boolean show) {
@@ -170,7 +222,13 @@ public class NavigationBarView extends LinearLayout {
 
         mShowMenu = show;
 
-        getMenuButton().setVisibility(mShowMenu ? View.VISIBLE : View.INVISIBLE);
+        if (mShowMenuButton && mShowSearchButton) {
+            getMenuStock().setVisibility(View.GONE);
+        } else if (mShowMenuButton && !mShowSearchButton) {
+            getMenuStock().setVisibility(View.INVISIBLE);
+        } else {
+            getMenuStock().setVisibility(mShowMenu ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     public void setLowProfile(final boolean lightsOut) {
@@ -182,10 +240,18 @@ public class NavigationBarView extends LinearLayout {
 
         mLowProfile = lightsOut;
 
+        if (mShowMenuButton && mShowSearchButton) {
+            mLightsOut = R.id.lights_out_5;
+        } else if (!mShowMenuButton && !mShowSearchButton) {
+            mLightsOut = R.id.lights_out;
+        } else {
+            mLightsOut = R.id.lights_out_4;
+        }
+
         if (DEBUG) Slog.d(TAG, "setting lights " + (lightsOut?"out":"on"));
 
         final View navButtons = mCurrentView.findViewById(R.id.nav_buttons);
-        final View lowLights = mCurrentView.findViewById(R.id.lights_out);
+        final View lowLights = mCurrentView.findViewById(mLightsOut);
 
         // ok, everyone, stop it right there
         navButtons.animate().cancel();
@@ -260,6 +326,8 @@ public class NavigationBarView extends LinearLayout {
         mCurrentView.setVisibility(View.VISIBLE);
         mVertical = (rot == Surface.ROTATION_90 || rot == Surface.ROTATION_270);
 
+        setNavButtonViews();
+
         // force the low profile & disabled states into compliance
         setLowProfile(mLowProfile, false, true /* force */);
         setDisabledFlags(mDisabledFlags, true /* force */);
@@ -274,35 +342,37 @@ public class NavigationBarView extends LinearLayout {
         }
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        if (DEBUG) Slog.d(TAG, String.format(
-                    "onSizeChanged: (%dx%d) old: (%dx%d)", w, h, oldw, oldh));
-        postCheckForInvalidLayout("sizeChanged");
-        super.onSizeChanged(w, h, oldw, oldh);
-    }
+    public void setNavButtonViews() {
+        ContentResolver resolver = mContext.getContentResolver();
+        mShowMenuButton = (Settings.System.getInt(resolver,
+                Settings.System.SHOW_MENU_BUTTON, 0) == 1);
+        mShowSearchButton = (Settings.System.getInt(resolver,
+                Settings.System.SHOW_SEARCH_BUTTON, 0) == 1);
 
-    /*
-    @Override
-    protected void onLayout (boolean changed, int left, int top, int right, int bottom) {
-        if (DEBUG) Slog.d(TAG, String.format(
-                    "onLayout: %s (%d,%d,%d,%d)", 
-                    changed?"changed":"notchanged", left, top, right, bottom));
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
-    // uncomment this for extra defensiveness in WORKAROUND_INVALID_LAYOUT situations: if all else
-    // fails, any touch on the display will fix the layout.
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (DEBUG) Slog.d(TAG, "onInterceptTouchEvent: " + ev.toString());
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            postCheckForInvalidLayout("touch");
+        // Let's start clean
+        ViewGroup navButtonView = ((ViewGroup) mCurrentView.findViewById(R.id.nav_buttons));
+        for (int nb = 0; nb < navButtonView.getChildCount(); nb++) {
+            if (!(navButtonView.getChildAt(nb) instanceof KeyButtonView)) {
+                navButtonView.getChildAt(nb).setVisibility(View.GONE);
+            }
         }
-        return super.onInterceptTouchEvent(ev);
+
+        // Setup the optional buttons
+        getMenuButton().setVisibility(mShowMenuButton ? View.VISIBLE : View.GONE);
+        getSearchButton().setVisibility(mShowSearchButton ? View.VISIBLE : View.GONE);
+        getOutsideSpacer().setVisibility(mShowSearchButton && mShowMenuButton ? View.GONE : View.INVISIBLE);
+
+        // These are only used on the stock layout
+        getOutsideSpacerSmall().setVisibility(!mShowSearchButton && !mShowMenuButton ? View.INVISIBLE : View.GONE);
+        getInsideSpacerOne().setVisibility(!mShowSearchButton && !mShowMenuButton ? View.INVISIBLE : View.GONE);
+        getInsideSpacerTwo().setVisibility(!mShowSearchButton && !mShowMenuButton ? View.INVISIBLE : View.GONE);
+        getMenuSpacer().setVisibility(!mShowSearchButton && !mShowMenuButton ? View.INVISIBLE : View.GONE);
+
+        // Force the stock menu button gone on five button layouts
+        if (mShowMenuButton && mShowSearchButton) {
+            getMenuStock().setVisibility(View.GONE);
+        }
     }
-    */
-        
 
     private String getResourceName(int resId) {
         if (resId != 0) {
