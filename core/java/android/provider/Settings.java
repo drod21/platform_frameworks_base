@@ -2058,6 +2058,14 @@ public final class Settings {
         public static final String SHOW_SEARCH_BUTTON = "show_search_button";
 
         /**
+
+        /**
+         * Setting to change navigation button color
+         * @hide
+         */
+        public static final String NAVIGATION_BUTTON_COLOR = "navigation_button_color";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
