@@ -491,7 +491,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     "fancy_rotation_anim"), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
-recents.
                     Settings.System.USE_QUICK_DASH), false, this);
             updateSettings();
         }
