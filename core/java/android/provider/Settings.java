@@ -1917,6 +1917,18 @@ public final class Settings {
         public static final String LOCKSCREEN_SMS_CROSS = "lockscreen_sms_cross";
 
         /**
+         * 3rd party apps allowed for SMS popup
+         * @hide
+         */
+        public static final String LOCKSCREEN_SMS_APP = "lockscreen_sms_app"; 
+        
+        /**
+         * SMS Lockscreen popup text color picker
+         * @hide
+         */
+        public static final String LOCKSCREEN_SMS_COLOR = "lockscreen_sms_color"; 
+
+        /**
          * Whether to show the battery bar
          * @hide
          */

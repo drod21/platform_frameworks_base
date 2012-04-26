@@ -531,7 +531,6 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
     class GestureListener extends SimpleOnGestureListener {
     	@Override  
 		public boolean onSingleTapConfirmed(MotionEvent e) {
-    		if (mSMSApp == null) {
     			Intent i = new Intent(Intent.ACTION_MAIN);
             	i.setClassName("com.android.mms", "com.android.mms.ui.ConversationList");
             	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -539,9 +538,6 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
             	mCallback.goToUnlockScreen();
             	mLockSMS.setVisibility(View.GONE);
             	Settings.System.putInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1);
-    		} else {
-    			runActivity(mSMSApp);
-    		}
 			return true;  
 		}
     	
