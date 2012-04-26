@@ -343,8 +343,6 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.NAV_BUTTONS_SLOT_FOUR, 3));
         mSlotFive = (Settings.System.getInt(resolver,
                 Settings.System.NAV_BUTTONS_SLOT_FIVE, 0));
-        mUseAltIcons = (Settings.System.getInt(resolver,
-                Settings.System.USE_ALT_ICONS, 0) == 1);
 
         isPortrait = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
@@ -381,17 +379,6 @@ public class NavigationBarView extends LinearLayout {
             getInsideSpacerTwo().setVisibility(View.GONE);
             getMenuSpacer().setVisibility(View.GONE);
         }
-
-        int mMenuImg = (mUseAltIcons ? R.drawable.ic_sysbar_menu_alt : R.drawable.ic_sysbar_menu);
-        int mMenuImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_menu_alt_land : R.drawable.ic_sysbar_menu_land);
-        int mBackImg = (mUseAltIcons ? R.drawable.ic_sysbar_back_alt : R.drawable.ic_sysbar_back);
-        int mBackImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_back_alt_land : R.drawable.ic_sysbar_back_land);
-        int mHomeImg = (mUseAltIcons ? R.drawable.ic_sysbar_home_alt : R.drawable.ic_sysbar_home);
-        int mHomeImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_home_alt_land : R.drawable.ic_sysbar_home_land);
-        int mRecentImg = (mUseAltIcons ? R.drawable.ic_sysbar_recent_alt : R.drawable.ic_sysbar_recent);
-        int mRecentImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_recent_alt_land : R.drawable.ic_sysbar_recent_land);
-        int mSearchImg = (mUseAltIcons ? R.drawable.ic_sysbar_search_alt : R.drawable.ic_sysbar_search);
-        int mSearchImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_search_alt_land : R.drawable.ic_sysbar_search_land);
 
         switch (mSlotOne) {
             case 1:
