@@ -395,6 +395,7 @@ public class PhoneStatusBar extends StatusBar {
             resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_THREE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_FOUR), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAV_BUTTONS_SLOT_FIVE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.USE_ALT_ICONS), false, this);
             onChange(true);
         }
 

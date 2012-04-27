@@ -343,37 +343,279 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.NAV_BUTTONS_SLOT_FOUR, 3));
         mSlotFive = (Settings.System.getInt(resolver,
                 Settings.System.NAV_BUTTONS_SLOT_FIVE, 0));
-	}
 
-     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        if (DEBUG) Slog.d(TAG, String.format(
-                    "onSizeChanged: (%dx%d) old: (%dx%d)", w, h, oldw, oldh));
-        postCheckForInvalidLayout("sizeChanged");
-        super.onSizeChanged(w, h, oldw, oldh);
-    }
+        isPortrait = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
-    /*
-    @Override
-    protected void onLayout (boolean changed, int left, int top, int right, int bottom) {
-        if (DEBUG) Slog.d(TAG, String.format(
-                    "onLayout: %s (%d,%d,%d,%d)", 
-                    changed?"changed":"notchanged", left, top, right, bottom));
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
-    // uncomment this for extra defensiveness in WORKAROUND_INVALID_LAYOUT situations: if all else
-    // fails, any touch on the display will fix the layout.
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (DEBUG) Slog.d(TAG, "onInterceptTouchEvent: " + ev.toString());
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            postCheckForInvalidLayout("touch");
+        // Let's start clean
+        ViewGroup navButtonView = ((ViewGroup) mCurrentView.findViewById(R.id.nav_buttons));
+        for (int nb = 0; nb < navButtonView.getChildCount(); nb++) {
+            if (!(navButtonView.getChildAt(nb) instanceof KeyButtonView)) {
+                navButtonView.getChildAt(nb).setVisibility(View.GONE);
+            }
         }
-        return super.onInterceptTouchEvent(ev);
-    }
-    */
 
+        KeyButtonView oneView = (KeyButtonView) mCurrentView.findViewById(R.id.slot_one);
+        KeyButtonView twoView = (KeyButtonView) mCurrentView.findViewById(R.id.slot_two);
+        KeyButtonView threeView = (KeyButtonView) mCurrentView.findViewById(R.id.slot_three);
+        KeyButtonView fourView = (KeyButtonView) mCurrentView.findViewById(R.id.slot_four);
+        KeyButtonView fiveView = (KeyButtonView) mCurrentView.findViewById(R.id.slot_five);
+
+        if ((mSlotOne != 0) && (mSlotFive != 0)) {
+            getOutsideSpacer().setVisibility(View.GONE);
+            getMenuStock().setVisibility(View.GONE);
+        } else {
+            getOutsideSpacer().setVisibility(View.INVISIBLE);
+            getMenuStock().setVisibility(View.INVISIBLE);
+        }
+
+        if ((mSlotOne == 0) && (mSlotFive == 0)) {
+            getOutsideSpacerSmall().setVisibility(View.INVISIBLE);
+            getInsideSpacerOne().setVisibility(View.INVISIBLE);
+            getInsideSpacerTwo().setVisibility(View.INVISIBLE);
+            getMenuSpacer().setVisibility(View.INVISIBLE);
+        } else {
+            getOutsideSpacerSmall().setVisibility(View.GONE);
+            getInsideSpacerOne().setVisibility(View.GONE);
+            getInsideSpacerTwo().setVisibility(View.GONE);
+            getMenuSpacer().setVisibility(View.GONE);
+        }
+
+        switch (mSlotOne) {
+            case 1:
+                oneView.setTag("menu");
+                oneView.setContentDescription(mContext.getResources().getString(R.string.accessibility_menu));
+                oneView.setMCode(KeyEvent.KEYCODE_MENU);
+                oneView.setImageResource(isPortrait ? mMenuImg : mMenuImgLand);
+                break;
+            case 2:
+                oneView.setTag("back");
+                oneView.setContentDescription(mContext.getResources().getString(R.string.accessibility_back));
+                oneView.setMCode(KeyEvent.KEYCODE_BACK);
+                oneView.setImageResource(isPortrait ? mBackImg : mBackImgLand);
+                break;
+            case 3:
+                oneView.setTag("home");
+                oneView.setContentDescription(mContext.getResources().getString(R.string.accessibility_home));
+                oneView.setMCode(KeyEvent.KEYCODE_HOME);
+                oneView.setImageResource(isPortrait ? mHomeImg : mHomeImgLand);
+                break;
+            case 4:
+                oneView.setTag("recent");
+                oneView.setContentDescription(mContext.getResources().getString(R.string.accessibility_recent));
+                oneView.setMCode(0);
+                oneView.setImageResource(isPortrait ? mRecentImg : mRecentImgLand);
+                break;
+            case 5:
+                oneView.setTag("search");
+                oneView.setContentDescription(mContext.getResources().getString(R.string.accessibility_search));
+                oneView.setMCode(KeyEvent.KEYCODE_SEARCH);
+                oneView.setImageResource(isPortrait ? mSearchImg : mSearchImgLand);
+                break;
+            case 6:
+                oneView.setTag("media_previous");
+                oneView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_previous));
+                oneView.setMCode(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+                oneView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_previous : R.drawable.ic_sysbar_media_previous_land);
+                break;
+            case 7:
+                oneView.setTag("media_next");
+                oneView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_next));
+                oneView.setMCode(KeyEvent.KEYCODE_MEDIA_NEXT);
+                oneView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_next : R.drawable.ic_sysbar_media_next_land);
+                break;
+            default:
+            case 0:
+                oneView.setVisibility(View.GONE);
+                break;
+        }
+
+        switch (mSlotTwo) {
+            case 0:
+                twoView.setTag("menu");
+                twoView.setContentDescription(mContext.getResources().getString(R.string.accessibility_menu));
+                twoView.setMCode(KeyEvent.KEYCODE_MENU);
+                twoView.setImageResource(isPortrait ? mMenuImg : mMenuImgLand);
+                break;
+            case 2:
+                twoView.setTag("home");
+                twoView.setContentDescription(mContext.getResources().getString(R.string.accessibility_home));
+                twoView.setMCode(KeyEvent.KEYCODE_HOME);
+                twoView.setImageResource(isPortrait ? mHomeImg : mHomeImgLand);
+                break;
+            case 3:
+                twoView.setTag("recent");
+                twoView.setContentDescription(mContext.getResources().getString(R.string.accessibility_recent));
+                twoView.setMCode(0);
+                twoView.setImageResource(isPortrait ? mRecentImg : mRecentImgLand);
+                break;
+            case 4:
+                twoView.setTag("search");
+                twoView.setContentDescription(mContext.getResources().getString(R.string.accessibility_search));
+                twoView.setMCode(KeyEvent.KEYCODE_SEARCH);
+                twoView.setImageResource(isPortrait ? mSearchImg : mSearchImgLand);
+                break;
+            case 5:
+                twoView.setTag("media_previous");
+                twoView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_previous));
+                twoView.setMCode(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+                twoView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_previous : R.drawable.ic_sysbar_media_previous_land);
+                break;
+            case 6:
+                twoView.setTag("media_next");
+                twoView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_next));
+                twoView.setMCode(KeyEvent.KEYCODE_MEDIA_NEXT);
+                twoView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_next : R.drawable.ic_sysbar_media_next_land);
+                break;
+            default:
+            case 1:
+                twoView.setTag("back");
+                twoView.setContentDescription(mContext.getResources().getString(R.string.accessibility_back));
+                twoView.setMCode(KeyEvent.KEYCODE_BACK);
+                twoView.setImageResource(isPortrait ? mBackImg : mBackImgLand);
+                break;
+        }
+
+        switch (mSlotThree) {
+            case 0:
+                threeView.setTag("menu");
+                threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_menu));
+                threeView.setMCode(KeyEvent.KEYCODE_MENU);
+                threeView.setImageResource(isPortrait ? mMenuImg : mMenuImgLand);
+                break;
+            case 1:
+                threeView.setTag("back");
+                threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_back));
+                threeView.setMCode(KeyEvent.KEYCODE_BACK);
+                threeView.setImageResource(isPortrait ? mBackImg : mBackImgLand);
+                break;
+            case 3:
+                threeView.setTag("recent");
+                threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_recent));
+                threeView.setMCode(0);
+                threeView.setImageResource(isPortrait ? mRecentImg : mRecentImgLand);
+                break;
+            case 4:
+                threeView.setTag("search");
+                threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_search));
+                threeView.setMCode(KeyEvent.KEYCODE_SEARCH);
+                threeView.setImageResource(isPortrait ? mSearchImg : mSearchImgLand);
+                break;
+            case 5:
+                threeView.setTag("media_previous");
+                threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_previous));
+                threeView.setMCode(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+                threeView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_previous : R.drawable.ic_sysbar_media_previous_land);
+                break;
+            case 6:
+                threeView.setTag("media_next");
+                threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_next));
+                threeView.setMCode(KeyEvent.KEYCODE_MEDIA_NEXT);
+                threeView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_next : R.drawable.ic_sysbar_media_next_land);
+                break;
+            default:
+            case 2:
+                threeView.setTag("home");
+                threeView.setContentDescription(mContext.getResources().getString(R.string.accessibility_home));
+                threeView.setMCode(KeyEvent.KEYCODE_HOME);
+                threeView.setImageResource(isPortrait ? mHomeImg : mHomeImgLand);
+                break;
+        }
+        
+        switch (mSlotFour) {
+            case 0:
+                fourView.setTag("menu");
+                fourView.setContentDescription(mContext.getResources().getString(R.string.accessibility_menu));
+                fourView.setMCode(KeyEvent.KEYCODE_MENU);
+                fourView.setImageResource(isPortrait ? mMenuImg : mMenuImgLand);
+                break;
+            case 1:
+                fourView.setTag("back");
+                fourView.setContentDescription(mContext.getResources().getString(R.string.accessibility_back));
+                fourView.setMCode(KeyEvent.KEYCODE_BACK);
+                fourView.setImageResource(isPortrait ? mBackImg : mBackImgLand);
+                break;
+            case 2:
+                fourView.setTag("home");
+                fourView.setContentDescription(mContext.getResources().getString(R.string.accessibility_home));
+                fourView.setMCode(KeyEvent.KEYCODE_HOME);
+                fourView.setImageResource(isPortrait ? mHomeImg : mHomeImgLand);
+                break;
+            case 4:
+                fourView.setTag("search");
+                fourView.setContentDescription(mContext.getResources().getString(R.string.accessibility_search));
+                fourView.setMCode(KeyEvent.KEYCODE_SEARCH);
+                fourView.setImageResource(isPortrait ? mSearchImg : mSearchImgLand);
+                break;
+            case 5:
+                fourView.setTag("media_previous");
+                fourView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_previous));
+                fourView.setMCode(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+                fourView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_previous : R.drawable.ic_sysbar_media_previous_land);
+                break;
+            case 6:
+                fourView.setTag("media_next");
+                fourView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_next));
+                fourView.setMCode(KeyEvent.KEYCODE_MEDIA_NEXT);
+                fourView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_next : R.drawable.ic_sysbar_media_next_land);
+                break;
+            default:
+            case 3:
+                fourView.setTag("recent");
+                fourView.setContentDescription(mContext.getResources().getString(R.string.accessibility_recent));
+                fourView.setMCode(0);
+                fourView.setImageResource(isPortrait ? mRecentImg : mRecentImgLand);
+                break;
+        }
+
+        switch (mSlotFive) {
+            case 1:
+                fiveView.setTag("menu");
+                fiveView.setContentDescription(mContext.getResources().getString(R.string.accessibility_menu));
+                fiveView.setMCode(KeyEvent.KEYCODE_MENU);
+                fiveView.setImageResource(isPortrait ? mMenuImg : mMenuImgLand);
+                break;
+            case 2:
+                fiveView.setTag("back");
+                fiveView.setContentDescription(mContext.getResources().getString(R.string.accessibility_back));
+                fiveView.setMCode(KeyEvent.KEYCODE_BACK);
+                fiveView.setImageResource(isPortrait ? mBackImg : mBackImgLand);
+                break;
+            case 3:
+                fiveView.setTag("home");
+                fiveView.setContentDescription(mContext.getResources().getString(R.string.accessibility_home));
+                fiveView.setMCode(KeyEvent.KEYCODE_HOME);
+                fiveView.setImageResource(isPortrait ? mHomeImg : mHomeImgLand);
+                break;
+            case 4:
+                fiveView.setTag("recent");
+                fiveView.setContentDescription(mContext.getResources().getString(R.string.accessibility_recent));
+                fiveView.setMCode(0);
+                fiveView.setImageResource(isPortrait ? mRecentImg : mRecentImgLand);
+                break;
+            case 5:
+                fiveView.setTag("search");
+                fiveView.setContentDescription(mContext.getResources().getString(R.string.accessibility_search));
+                fiveView.setMCode(KeyEvent.KEYCODE_SEARCH);
+                fiveView.setImageResource(isPortrait ? mSearchImg : mSearchImgLand);
+                break;
+            case 6:
+                fiveView.setTag("media_previous");
+                fiveView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_previous));
+                fiveView.setMCode(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+                fiveView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_previous : R.drawable.ic_sysbar_media_previous_land);
+                break;
+            case 7:
+                fiveView.setTag("media_next");
+                fiveView.setContentDescription(mContext.getResources().getString(R.string.accessibility_media_next));
+                fiveView.setMCode(KeyEvent.KEYCODE_MEDIA_NEXT);
+                fiveView.setImageResource(isPortrait ? R.drawable.ic_sysbar_media_next : R.drawable.ic_sysbar_media_next_land);
+                break;
+            default:
+            case 0:
+                fiveView.setVisibility(View.GONE);
+                break;
+        }
+    }
 
     private String getResourceName(int resId) {
         if (resId != 0) {
