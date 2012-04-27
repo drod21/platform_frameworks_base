@@ -343,10 +343,6 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.NAV_BUTTONS_SLOT_FOUR, 3));
         mSlotFive = (Settings.System.getInt(resolver,
                 Settings.System.NAV_BUTTONS_SLOT_FIVE, 0));
-        mUseAltIcons = (Settings.System.getInt(resolver,
-                Settings.System.USE_ALT_ICONS, 0) == 1);
-
-        isPortrait = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
         // Let's start clean
         ViewGroup navButtonView = ((ViewGroup) mCurrentView.findViewById(R.id.nav_buttons));
@@ -382,16 +378,16 @@ public class NavigationBarView extends LinearLayout {
             getMenuSpacer().setVisibility(View.GONE);
         }
 
-        int mMenuImg = (mUseAltIcons ? R.drawable.ic_sysbar_menu_alt : R.drawable.ic_sysbar_menu);
-        int mMenuImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_menu_alt_land : R.drawable.ic_sysbar_menu_land);
-        int mBackImg = (mUseAltIcons ? R.drawable.ic_sysbar_back_alt : R.drawable.ic_sysbar_back);
-        int mBackImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_back_alt_land : R.drawable.ic_sysbar_back_land);
-        int mHomeImg = (mUseAltIcons ? R.drawable.ic_sysbar_home_alt : R.drawable.ic_sysbar_home);
-        int mHomeImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_home_alt_land : R.drawable.ic_sysbar_home_land);
-        int mRecentImg = (mUseAltIcons ? R.drawable.ic_sysbar_recent_alt : R.drawable.ic_sysbar_recent);
-        int mRecentImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_recent_alt_land : R.drawable.ic_sysbar_recent_land);
-        int mSearchImg = (mUseAltIcons ? R.drawable.ic_sysbar_search_alt : R.drawable.ic_sysbar_search);
-        int mSearchImgLand = (mUseAltIcons ? R.drawable.ic_sysbar_search_alt_land : R.drawable.ic_sysbar_search_land);
+        int mMenuImg = (R.drawable.ic_sysbar_menu);
+        int mMenuImgLand = (R.drawable.ic_sysbar_menu_land);
+        int mBackImg = (R.drawable.ic_sysbar_back);
+        int mBackImgLand = (R.drawable.ic_sysbar_back_land);
+        int mHomeImg = (R.drawable.ic_sysbar_home);
+        int mHomeImgLand = (R.drawable.ic_sysbar_home_land);
+        int mRecentImg = (R.drawable.ic_sysbar_recent);
+        int mRecentImgLand = (R.drawable.ic_sysbar_recent_land);
+        int mSearchImg = (R.drawable.ic_sysbar_search);
+        int mSearchImgLand = (R.drawable.ic_sysbar_search_land);
 
         switch (mSlotOne) {
             case 1:
