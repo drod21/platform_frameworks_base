@@ -20,6 +20,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Rect;
@@ -343,6 +344,8 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.NAV_BUTTONS_SLOT_FOUR, 3));
         mSlotFive = (Settings.System.getInt(resolver,
                 Settings.System.NAV_BUTTONS_SLOT_FIVE, 0));
+
+	isPortrait = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
         // Let's start clean
         ViewGroup navButtonView = ((ViewGroup) mCurrentView.findViewById(R.id.nav_buttons));
