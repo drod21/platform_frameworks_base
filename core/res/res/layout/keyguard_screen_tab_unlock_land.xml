@@ -102,6 +102,7 @@
             android:id="@+id/locksms"             
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+	    android:layout_below="@id/status2"
 	    android:layout_centerHorizontal="true"
             android:lines="2"
             android:ellipsize="end"
