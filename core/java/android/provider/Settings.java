@@ -1988,6 +1988,16 @@ public final class Settings {
         public static final String LOCKSCREEN_SMS_COLOR = "lockscreen_sms_color"; 
 
         /**
+         * Is music playing & transportview visible?
+         * 1 = visible transport view
+         * 0 = hidden transport view
+         * wont allow SMS popup to work with transportview visible
+         * as they dont play nice together
+         * @hide
+         */
+        public static final String LOCKSCREEN_SMS_MUSIC = "lockscreen_sms_music"; 
+
+        /**
          * Whether to show the battery bar
          * @hide
          */
