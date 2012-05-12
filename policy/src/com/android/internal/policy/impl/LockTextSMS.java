@@ -141,7 +141,7 @@ public class LockTextSMS extends TextView {
 	boolean musicPlaying = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_MUSIC, 0) == 1);
     	
 	if (showTexts) {
-    	  Uri uri = Uri.parse("content://sms/inbox")
+    	  Uri uri = Uri.parse("content://sms/inbox");
 
           Cursor c = mContext.getContentResolver().query(uri, null, "read = 0", null, null);
           int unreadSMSCount = c.getCount();
