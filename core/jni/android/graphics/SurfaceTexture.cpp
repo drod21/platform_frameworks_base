@@ -112,7 +112,7 @@ JNIEnv* JNISurfaceTextureContext::getJNIEnv(bool* needsDetach) {
         JavaVM* vm = AndroidRuntime::getJavaVM();
         int result = vm->AttachCurrentThread(&env, (void*) &args);
         if (result != JNI_OK) {
-            ALOGE("thread attach failed: %#x", result);
+            LOGE("thread attach failed: %#x", result);
             return NULL;
         }
         *needsDetach = true;
@@ -124,7 +124,7 @@ void JNISurfaceTextureContext::detachJNI() {
     JavaVM* vm = AndroidRuntime::getJavaVM();
     int result = vm->DetachCurrentThread();
     if (result != JNI_OK) {
-        ALOGE("thread detach failed: %#x", result);
+        LOGE("thread detach failed: %#x", result);
     }
 }
 
@@ -164,14 +164,14 @@ static void SurfaceTexture_classInit(JNIEnv* env, jclass clazz)
     fields.surfaceTexture = env->GetFieldID(clazz,
             ANDROID_GRAPHICS_SURFACETEXTURE_JNI_ID, "I");
     if (fields.surfaceTexture == NULL) {
-        ALOGE("can't find android/graphics/SurfaceTexture.%s",
+        LOGE("can't find android/graphics/SurfaceTexture.%s",
                 ANDROID_GRAPHICS_SURFACETEXTURE_JNI_ID);
     }
 
     fields.postEvent = env->GetStaticMethodID(clazz, "postEventFromNative",
             "(Ljava/lang/Object;)V");
     if (fields.postEvent == NULL) {
-        ALOGE("can't find android/graphics/SurfaceTexture.postEventFromNative");
+        LOGE("can't find android/graphics/SurfaceTexture.postEventFromNative");
     }
 }
 

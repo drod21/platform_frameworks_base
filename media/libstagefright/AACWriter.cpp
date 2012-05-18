@@ -84,7 +84,7 @@ status_t AACWriter::addSource(const sp<MediaSource> &source) {
     }
 
     if (mSource != NULL) {
-        ALOGE("AAC files only support a single track of audio.");
+        LOGE("AAC files only support a single track of audio.");
         return UNKNOWN_ERROR;
     }
 
@@ -216,7 +216,7 @@ static bool getSampleRateTableIndex(int sampleRate, uint8_t* tableIndex) {
         }
     }
 
-    ALOGE("Sampling rate %d bps is not supported", sampleRate);
+    LOGE("Sampling rate %d bps is not supported", sampleRate);
     return false;
 }
 

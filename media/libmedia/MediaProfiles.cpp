@@ -903,7 +903,7 @@ MediaProfiles::createInstanceFromXmlFile(const char *xml)
       expat is not compiled with -DXML_DTD. We don't have DTD parsing support.
 
       if (!::XML_SetParamEntityParsing(parser, XML_PARAM_ENTITY_PARSING_ALWAYS)) {
-          ALOGE("failed to enable DTD support in the xml file");
+          LOGE("failed to enable DTD support in the xml file");
           return UNKNOWN_ERROR;
       }
 
@@ -913,7 +913,7 @@ MediaProfiles::createInstanceFromXmlFile(const char *xml)
     for (;;) {
         void *buff = ::XML_GetBuffer(parser, BUFF_SIZE);
         if (buff == NULL) {
-            ALOGE("failed to in call to XML_GetBuffer()");
+            LOGE("failed to in call to XML_GetBuffer()");
             delete profiles;
             profiles = NULL;
             goto exit;
@@ -921,7 +921,7 @@ MediaProfiles::createInstanceFromXmlFile(const char *xml)
 
         int bytes_read = ::fread(buff, 1, BUFF_SIZE, fp);
         if (bytes_read < 0) {
-            ALOGE("failed in call to read");
+            LOGE("failed in call to read");
             delete profiles;
             profiles = NULL;
             goto exit;
@@ -963,7 +963,7 @@ int MediaProfiles::getVideoEncoderParamByName(const char *name, video_encoder co
         }
     }
     if (index == -1) {
-        ALOGE("The given video encoder %d is not found", codec);
+        LOGE("The given video encoder %d is not found", codec);
         return -1;
     }
 
@@ -976,7 +976,7 @@ int MediaProfiles::getVideoEncoderParamByName(const char *name, video_encoder co
     if (!strcmp("enc.vid.fps.min", name)) return mVideoEncoders[index]->mMinFrameRate;
     if (!strcmp("enc.vid.fps.max", name)) return mVideoEncoders[index]->mMaxFrameRate;
 
-    ALOGE("The given video encoder param name %s is not found", name);
+    LOGE("The given video encoder param name %s is not found", name);
     return -1;
 }
 int MediaProfiles::getVideoEditorExportParamByName(
@@ -993,7 +993,7 @@ int MediaProfiles::getVideoEditorExportParamByName(
         }
     }
     if (index == -1) {
-        ALOGE("The given video decoder %d is not found", codec);
+        LOGE("The given video decoder %d is not found", codec);
         return -1;
     }
     if (!strcmp("videoeditor.export.profile", name))
@@ -1001,7 +1001,7 @@ int MediaProfiles::getVideoEditorExportParamByName(
     if (!strcmp("videoeditor.export.level", name))
         return exportProfile->mLevel;
 
-    ALOGE("The given video editor export param name %s is not found", name);
+    LOGE("The given video editor export param name %s is not found", name);
     return -1;
 }
 int MediaProfiles::getVideoEditorCapParamByName(const char *name) const
@@ -1009,7 +1009,7 @@ int MediaProfiles::getVideoEditorCapParamByName(const char *name) const
     ALOGV("getVideoEditorCapParamByName: %s", name);
 
     if (mVideoEditorCap == NULL) {
-        ALOGE("The mVideoEditorCap is not created, then create default cap.");
+        LOGE("The mVideoEditorCap is not created, then create default cap.");
         createDefaultVideoEditorCap(sInstance);
     }
 
@@ -1024,7 +1024,7 @@ int MediaProfiles::getVideoEditorCapParamByName(const char *name) const
     if (!strcmp("maxPrefetchYUVFrames", name))
         return mVideoEditorCap->mMaxPrefetchYUVFrames;
 
-    ALOGE("The given video editor param name %s is not found", name);
+    LOGE("The given video editor param name %s is not found", name);
     return -1;
 }
 
@@ -1048,7 +1048,7 @@ int MediaProfiles::getAudioEncoderParamByName(const char *name, audio_encoder co
         }
     }
     if (index == -1) {
-        ALOGE("The given audio encoder %d is not found", codec);
+        LOGE("The given audio encoder %d is not found", codec);
         return -1;
     }
 
@@ -1059,7 +1059,7 @@ int MediaProfiles::getAudioEncoderParamByName(const char *name, audio_encoder co
     if (!strcmp("enc.aud.hz.min", name)) return mAudioEncoders[index]->mMinSampleRate;
     if (!strcmp("enc.aud.hz.max", name)) return mAudioEncoders[index]->mMaxSampleRate;
 
-    ALOGE("The given audio encoder param name %s is not found", name);
+    LOGE("The given audio encoder param name %s is not found", name);
     return -1;
 }
 
@@ -1103,7 +1103,7 @@ int MediaProfiles::getCamcorderProfileParamByName(const char *name,
 
     int index = getCamcorderProfileIndex(cameraId, quality);
     if (index == -1) {
-        ALOGE("The given camcorder profile camera %d quality %d is not found",
+        LOGE("The given camcorder profile camera %d quality %d is not found",
              cameraId, quality);
         return -1;
     }
@@ -1120,7 +1120,7 @@ int MediaProfiles::getCamcorderProfileParamByName(const char *name,
     if (!strcmp("aud.ch", name)) return mCamcorderProfiles[index]->mAudioCodec->mChannels;
     if (!strcmp("aud.hz", name)) return mCamcorderProfiles[index]->mAudioCodec->mSampleRate;
 
-    ALOGE("The given camcorder profile param id %d name %s is not found", cameraId, name);
+    LOGE("The given camcorder profile param id %d name %s is not found", cameraId, name);
     return -1;
 }
 

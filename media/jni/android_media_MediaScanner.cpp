@@ -49,7 +49,7 @@ static fields_t fields;
 
 static status_t checkAndClearExceptionFromCallback(JNIEnv* env, const char* methodName) {
     if (env->ExceptionCheck()) {
-        ALOGE("An exception was thrown by callback '%s'.", methodName);
+        LOGE("An exception was thrown by callback '%s'.", methodName);
         LOGE_EX(env);
         env->ExceptionClear();
         return UNKNOWN_ERROR;
@@ -72,7 +72,7 @@ public:
                 env->FindClass(kClassMediaScannerClient);
 
         if (mediaScannerClientInterface == NULL) {
-            ALOGE("Class %s not found", kClassMediaScannerClient);
+            LOGE("Class %s not found", kClassMediaScannerClient);
         } else {
             mScanFileMethodID = env->GetMethodID(
                                     mediaScannerClientInterface,
@@ -214,7 +214,7 @@ android_media_MediaScanner_processDirectory(
     MyMediaScannerClient myClient(env, client);
     MediaScanResult result = mp->processDirectory(pathStr, myClient);
     if (result == MEDIA_SCAN_RESULT_ERROR) {
-        ALOGE("An error occurred while scanning directory '%s'.", pathStr);
+        LOGE("An error occurred while scanning directory '%s'.", pathStr);
     }
     env->ReleaseStringUTFChars(path, pathStr);
 }
@@ -254,7 +254,7 @@ android_media_MediaScanner_processFile(
     MyMediaScannerClient myClient(env, client);
     MediaScanResult result = mp->processFile(pathStr, mimeTypeStr, myClient);
     if (result == MEDIA_SCAN_RESULT_ERROR) {
-        ALOGE("An error occurred while scanning file '%s'.", pathStr);
+        LOGE("An error occurred while scanning file '%s'.", pathStr);
     }
     env->ReleaseStringUTFChars(path, pathStr);
     if (mimeType) {

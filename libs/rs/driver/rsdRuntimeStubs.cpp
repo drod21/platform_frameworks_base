@@ -686,7 +686,7 @@ void* rsdLookupRuntimeStub(void* pContext, char const* name) {
         s->mHal.info.isThreadable &= sym->threadable;
         return sym->mPtr;
     }
-    ALOGE("ScriptC sym lookup failed for %s", name);
+    LOGE("ScriptC sym lookup failed for %s", name);
     return NULL;
 }
 

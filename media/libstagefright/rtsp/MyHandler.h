@@ -269,7 +269,7 @@ struct MyHandler : public AHandler {
 
             struct hostent *ent = gethostbyname(mSessionHost.c_str());
             if (ent == NULL) {
-                ALOGE("Failed to look up address of session host '%s'",
+                LOGE("Failed to look up address of session host '%s'",
                      mSessionHost.c_str());
 
                 return false;
@@ -292,7 +292,7 @@ struct MyHandler : public AHandler {
                 || rtpPort <= 0 || rtpPort > 65535
                 || rtcpPort <=0 || rtcpPort > 65535
                 || rtcpPort != rtpPort + 1) {
-            ALOGE("Server picked invalid RTP/RTCP port pair %s,"
+            LOGE("Server picked invalid RTP/RTCP port pair %s,"
                  " RTP port must be even, RTCP port must be one higher.",
                  server_port.c_str());
 
@@ -327,7 +327,7 @@ struct MyHandler : public AHandler {
                 (const sockaddr *)&addr, sizeof(addr));
 
         if (n < (ssize_t)buf->size()) {
-            ALOGE("failed to poke a hole for RTP packets");
+            LOGE("failed to poke a hole for RTP packets");
             return false;
         }
 
@@ -338,7 +338,7 @@ struct MyHandler : public AHandler {
                 (const sockaddr *)&addr, sizeof(addr));
 
         if (n < (ssize_t)buf->size()) {
-            ALOGE("failed to poke a hole for RTCP packets");
+            LOGE("failed to poke a hole for RTCP packets");
             return false;
         }
 
@@ -429,7 +429,7 @@ struct MyHandler : public AHandler {
                                 response->mContent->size());
 
                         if (!mSessionDesc->isValid()) {
-                            ALOGE("Failed to parse session description.");
+                            LOGE("Failed to parse session description.");
                             result = ERROR_MALFORMED;
                         } else {
                             ssize_t i = response->mHeaders.indexOfKey("content-base");
@@ -988,7 +988,7 @@ struct MyHandler : public AHandler {
                 }
 
                 if (result != OK) {
-                    ALOGE("seek failed, aborting.");
+                    LOGE("seek failed, aborting.");
                     (new AMessage('abor', id()))->post();
                 }
 

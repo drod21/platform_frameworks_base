@@ -77,7 +77,7 @@ status_t SampleIterator::seekTo(uint32_t sampleIndex) {
     if (sampleIndex >= mStopChunkSampleIndex) {
         status_t err;
         if ((err = findChunkRange(sampleIndex)) != OK) {
-            ALOGE("findChunkRange failed");
+            LOGE("findChunkRange failed");
             return err;
         }
     }
@@ -93,7 +93,7 @@ status_t SampleIterator::seekTo(uint32_t sampleIndex) {
 
         status_t err;
         if ((err = getChunkOffset(chunk, &mCurrentChunkOffset)) != OK) {
-            ALOGE("getChunkOffset return error");
+            LOGE("getChunkOffset return error");
             return err;
         }
 
@@ -107,7 +107,7 @@ status_t SampleIterator::seekTo(uint32_t sampleIndex) {
             size_t sampleSize;
             if ((err = getSampleSizeDirect(
                             firstChunkSampleIndex + i, &sampleSize)) != OK) {
-                ALOGE("getSampleSizeDirect return error");
+                LOGE("getSampleSizeDirect return error");
                 return err;
             }
 
@@ -134,7 +134,7 @@ status_t SampleIterator::seekTo(uint32_t sampleIndex) {
 
     status_t err;
     if ((err = findSampleTime(sampleIndex, &mCurrentSampleTime)) != OK) {
-        ALOGE("findSampleTime return error");
+        LOGE("findSampleTime return error");
         return err;
     }
 

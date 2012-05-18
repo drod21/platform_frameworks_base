@@ -104,7 +104,7 @@ int register_android_database_SQLiteCompiledSql(JNIEnv * env)
 
     clazz = env->FindClass("android/database/sqlite/SQLiteCompiledSql");
     if (clazz == NULL) {
-        ALOGE("Can't find android/database/sqlite/SQLiteCompiledSql");
+        LOGE("Can't find android/database/sqlite/SQLiteCompiledSql");
         return -1;
     }
 
@@ -112,7 +112,7 @@ int register_android_database_SQLiteCompiledSql(JNIEnv * env)
     gStatementField = env->GetFieldID(clazz, "nStatement", "I");
 
     if (gHandleField == NULL || gStatementField == NULL) {
-        ALOGE("Error locating fields");
+        LOGE("Error locating fields");
         return -1;
     }
 

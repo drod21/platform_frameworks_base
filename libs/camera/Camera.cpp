@@ -56,7 +56,7 @@ const sp<ICameraService>& Camera::getCameraService()
         binder->linkToDeath(mDeathNotifier);
         mCameraService = interface_cast<ICameraService>(binder);
     }
-    ALOGE_IF(mCameraService==0, "no CameraService!?");
+    LOGE_IF(mCameraService==0, "no CameraService!?");
     return mCameraService;
 }
 
@@ -72,7 +72,7 @@ sp<Camera> Camera::create(const sp<ICamera>& camera)
 {
      ALOGV("create");
      if (camera == 0) {
-         ALOGE("camera remote is a NULL pointer");
+         LOGE("camera remote is a NULL pointer");
          return 0;
      }
 

@@ -77,10 +77,10 @@ using namespace android;
     zerr = inflateInit2(&zstream, -MAX_WBITS);
     if (zerr != Z_OK) {
         if (zerr == Z_VERSION_ERROR) {
-            ALOGE("Installed zlib is not compatible with linked version (%s)\n",
+            LOGE("Installed zlib is not compatible with linked version (%s)\n",
                 ZLIB_VERSION);
         } else {
-            ALOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
+            LOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
         }
         goto bail;
     }
@@ -189,10 +189,10 @@ bail:
     zerr = inflateInit2(&zstream, -MAX_WBITS);
     if (zerr != Z_OK) {
         if (zerr == Z_VERSION_ERROR) {
-            ALOGE("Installed zlib is not compatible with linked version (%s)\n",
+            LOGE("Installed zlib is not compatible with linked version (%s)\n",
                 ZLIB_VERSION);
         } else {
-            ALOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
+            LOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
         }
         goto bail;
     }

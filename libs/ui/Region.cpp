@@ -69,7 +69,7 @@ Region::Region(const Rect& rhs)
 Region::Region(const void* buffer)
 {
     status_t err = read(buffer);
-    ALOGE_IF(err<0, "error %s reading Region from buffer", strerror(err));
+    LOGE_IF(err<0, "error %s reading Region from buffer", strerror(err));
 }
 
 Region::~Region()
@@ -338,15 +338,15 @@ bool Region::validate(const Region& reg, const char* name)
         b.bottom = b.bottom > cur->bottom ? b.bottom : cur->bottom;
         if (cur->top == prev->top) {
             if (cur->bottom != prev->bottom) {
-                ALOGE("%s: invalid span %p", name, cur);
+                LOGE("%s: invalid span %p", name, cur);
                 result = false;
             } else if (cur->left < prev->right) {
-                ALOGE("%s: spans overlap horizontally prev=%p, cur=%p",
+                LOGE("%s: spans overlap horizontally prev=%p, cur=%p",
                         name, prev, cur);
                 result = false;
             }
         } else if (cur->top < prev->bottom) {
-            ALOGE("%s: spans overlap vertically prev=%p, cur=%p",
+            LOGE("%s: spans overlap vertically prev=%p, cur=%p",
                     name, prev, cur);
             result = false;
         }
@@ -355,7 +355,7 @@ bool Region::validate(const Region& reg, const char* name)
     }
     if (b != reg.getBounds()) {
         result = false;
-        ALOGE("%s: invalid bounds [%d,%d,%d,%d] vs. [%d,%d,%d,%d]", name,
+        LOGE("%s: invalid bounds [%d,%d,%d,%d] vs. [%d,%d,%d,%d]", name,
                 b.left, b.top, b.right, b.bottom,
                 reg.getBounds().left, reg.getBounds().top, 
                 reg.getBounds().right, reg.getBounds().bottom);
@@ -480,7 +480,7 @@ void Region::boolean_operation(int op, Region& dst,
         const Rect& rhs, int dx, int dy)
 {
     if (!rhs.isValid()) {
-        ALOGE("Region::boolean_operation(op=%d) invalid Rect={%d,%d,%d,%d}",
+        LOGE("Region::boolean_operation(op=%d) invalid Rect={%d,%d,%d,%d}",
                 op, rhs.left, rhs.top, rhs.right, rhs.bottom);
         return;
     }

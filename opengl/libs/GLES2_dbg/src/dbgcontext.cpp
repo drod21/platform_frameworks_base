@@ -100,7 +100,7 @@ unsigned GetBytesPerPixel(const GLenum format, const GLenum type)
     case GL_UNSIGNED_BYTE:
         break;
     default:
-        ALOGE("GetBytesPerPixel: unknown type %x", type);
+        LOGE("GetBytesPerPixel: unknown type %x", type);
     }
 
     switch (format) {
@@ -115,7 +115,7 @@ unsigned GetBytesPerPixel(const GLenum format, const GLenum type)
     case 0x80E1:   // GL_BGRA_EXT
         return 4;
     default:
-        ALOGE("GetBytesPerPixel: unknown format %x", format);
+        LOGE("GetBytesPerPixel: unknown format %x", format);
     }
 
     return 1; // in doubt...

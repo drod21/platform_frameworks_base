@@ -295,7 +295,7 @@ status_t AndroidRuntime::callMain(const char* className,
 
     methodId = env->GetStaticMethodID(clazz, "main", "([Ljava/lang/String;)V");
     if (methodId == NULL) {
-        ALOGE("ERROR: could not find method %s.main(String[])\n", className);
+        LOGE("ERROR: could not find method %s.main(String[])\n", className);
         return UNKNOWN_ERROR;
     }
 
@@ -766,7 +766,7 @@ int AndroidRuntime::startVm(JavaVM** pJavaVM, JNIEnv** pEnv)
      * JNI calls.
      */
     if (JNI_CreateJavaVM(pJavaVM, pEnv, &initArgs) < 0) {
-        ALOGE("JNI_CreateJavaVM failed\n");
+        LOGE("JNI_CreateJavaVM failed\n");
         goto bail;
     }
 
@@ -838,7 +838,7 @@ void AndroidRuntime::start(const char* className, const char* options)
      * Register android functions.
      */
     if (startReg(env) < 0) {
-        ALOGE("Unable to register all android natives\n");
+        LOGE("Unable to register all android natives\n");
         return;
     }
 
@@ -869,13 +869,13 @@ void AndroidRuntime::start(const char* className, const char* options)
     char* slashClassName = toSlashClassName(className);
     jclass startClass = env->FindClass(slashClassName);
     if (startClass == NULL) {
-        ALOGE("JavaVM unable to locate class '%s'\n", slashClassName);
+        LOGE("JavaVM unable to locate class '%s'\n", slashClassName);
         /* keep going */
     } else {
         jmethodID startMeth = env->GetStaticMethodID(startClass, "main",
             "([Ljava/lang/String;)V");
         if (startMeth == NULL) {
-            ALOGE("JavaVM unable to find main() in '%s'\n", className);
+            LOGE("JavaVM unable to find main() in '%s'\n", className);
             /* keep going */
         } else {
             env->CallStaticVoidMethod(startClass, startMeth, strArray);
@@ -961,7 +961,7 @@ static int javaDetachThread(void)
 
     result = vm->DetachCurrentThread();
     if (result != JNI_OK)
-        ALOGE("ERROR: thread detach failed\n");
+        LOGE("ERROR: thread detach failed\n");
     return result;
 }
 

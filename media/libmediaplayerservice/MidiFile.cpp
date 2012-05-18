@@ -69,13 +69,13 @@ MidiFile::MidiFile() :
     if (pLibConfig == NULL)
         pLibConfig = EAS_Config();
     if ((pLibConfig == NULL) || (LIB_VERSION != pLibConfig->libVersion)) {
-        ALOGE("EAS library/header mismatch");
+        LOGE("EAS library/header mismatch");
         goto Failed;
     }
 
     // initialize EAS library
     if (EAS_Init(&mEasData) != EAS_SUCCESS) {
-        ALOGE("EAS_Init failed");
+        LOGE("EAS_Init failed");
         goto Failed;
     }
 
@@ -133,7 +133,7 @@ status_t MidiFile::setDataSource(
     }
 
     if (result != EAS_SUCCESS) {
-        ALOGE("EAS_OpenFile failed: [%d]", (int)result);
+        LOGE("EAS_OpenFile failed: [%d]", (int)result);
         mState = EAS_STATE_ERROR;
         return ERROR_OPEN_FAILED;
     }
@@ -161,7 +161,7 @@ status_t MidiFile::setDataSource(int fd, int64_t offset, int64_t length)
     updateState();
 
     if (result != EAS_SUCCESS) {
-        ALOGE("EAS_OpenFile failed: [%d]", (int)result);
+        LOGE("EAS_OpenFile failed: [%d]", (int)result);
         mState = EAS_STATE_ERROR;
         return ERROR_OPEN_FAILED;
     }
@@ -180,7 +180,7 @@ status_t MidiFile::prepare()
     }
     EAS_RESULT result;
     if ((result = EAS_Prepare(mEasData, mEasHandle)) != EAS_SUCCESS) {
-        ALOGE("EAS_Prepare failed: [%ld]", result);
+        LOGE("EAS_Prepare failed: [%ld]", result);
         return ERROR_EAS_FAILURE;
     }
     updateState();
@@ -236,7 +236,7 @@ status_t MidiFile::stop()
     if (!mPaused && (mState != EAS_STATE_STOPPED)) {
         EAS_RESULT result = EAS_Pause(mEasData, mEasHandle);
         if (result != EAS_SUCCESS) {
-            ALOGE("EAS_Pause returned error %ld", result);
+            LOGE("EAS_Pause returned error %ld", result);
             return ERROR_EAS_FAILURE;
         }
     }
@@ -257,7 +257,7 @@ status_t MidiFile::seekTo(int position)
         if ((result = EAS_Locate(mEasData, mEasHandle, position, false))
                 != EAS_SUCCESS)
         {
-            ALOGE("EAS_Locate returned %ld", result);
+            LOGE("EAS_Locate returned %ld", result);
             return ERROR_EAS_FAILURE;
         }
         EAS_GetLocation(mEasData, mEasHandle, &mPlayTime);
@@ -292,11 +292,11 @@ status_t MidiFile::getCurrentPosition(int* position)
 {
     ALOGV("MidiFile::getCurrentPosition");
     if (!mEasHandle) {
-        ALOGE("getCurrentPosition(): file not open");
+        LOGE("getCurrentPosition(): file not open");
         return ERROR_NOT_OPEN;
     }
     if (mPlayTime < 0) {
-        ALOGE("getCurrentPosition(): mPlayTime = %ld", mPlayTime);
+        LOGE("getCurrentPosition(): mPlayTime = %ld", mPlayTime);
         return ERROR_EAS_FAILURE;
     }
     *position = mPlayTime;
@@ -421,7 +421,7 @@ status_t MidiFile::setLooping(int loop)
 
 status_t MidiFile::createOutputTrack() {
     if (mAudioSink->open(pLibConfig->sampleRate, pLibConfig->numChannels, AUDIO_FORMAT_PCM_16_BIT, 2) != NO_ERROR) {
-        ALOGE("mAudioSink open failed");
+        LOGE("mAudioSink open failed");
         return ERROR_OPEN_FAILED;
     }
     return NO_ERROR;
@@ -443,7 +443,7 @@ int MidiFile::render() {
     // allocate render buffer
     mAudioBuffer = new EAS_PCM[pLibConfig->mixBufferSize * pLibConfig->numChannels * NUM_BUFFERS];
     if (!mAudioBuffer) {
-        ALOGE("mAudioBuffer allocate failed");
+        LOGE("mAudioBuffer allocate failed");
         goto threadExit;
     }
 
@@ -477,7 +477,7 @@ int MidiFile::render() {
         for (int i = 0; i < NUM_BUFFERS; i++) {
             result = EAS_Render(mEasData, p, pLibConfig->mixBufferSize, &count);
             if (result != EAS_SUCCESS) {
-                ALOGE("EAS_Render returned %ld", result);
+                LOGE("EAS_Render returned %ld", result);
             }
             p += count * pLibConfig->numChannels;
             num_output += count * pLibConfig->numChannels * sizeof(EAS_PCM);
@@ -499,7 +499,7 @@ int MidiFile::render() {
         // Write data to the audio hardware
         // ALOGV("MidiFile::render - writing to audio output");
         if ((temp = mAudioSink->write(mAudioBuffer, num_output)) < 0) {
-            ALOGE("Error in writing:%d",temp);
+            LOGE("Error in writing:%d",temp);
             return temp;
         }
 
@@ -523,7 +523,7 @@ int MidiFile::render() {
             }
             case EAS_STATE_ERROR:
             {
-                ALOGE("MidiFile::render - error");
+                LOGE("MidiFile::render - error");
                 sendEvent(MEDIA_ERROR, MEDIA_ERROR_UNKNOWN);
                 break;
             }

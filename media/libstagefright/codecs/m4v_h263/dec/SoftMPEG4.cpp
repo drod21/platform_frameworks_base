@@ -207,7 +207,7 @@ OMX_ERRORTYPE SoftMPEG4::internalGetParameter(
                     (OMX_VIDEO_PARAM_PROFILELEVELTYPE *) params;
 
             if (profileLevel->nPortIndex != 0) {  // Input port only
-                ALOGE("Invalid port index: %ld", profileLevel->nPortIndex);
+                LOGE("Invalid port index: %ld", profileLevel->nPortIndex);
                 return OMX_ErrorUnsupportedIndex;
             }
 
@@ -430,7 +430,7 @@ void SoftMPEG4::onQueueFilled(OMX_U32 portIndex) {
                     mHandle, &bitstream, &timestamp, &tmp,
                     &useExtTimestamp,
                     outHeader->pBuffer) != PV_TRUE) {
-            ALOGE("failed to decode video frame.");
+            LOGE("failed to decode video frame.");
 
             notify(OMX_EventError, OMX_ErrorUndefined, 0, NULL);
             mSignalledError = true;

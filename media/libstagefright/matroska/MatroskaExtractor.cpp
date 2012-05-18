@@ -245,7 +245,7 @@ void BlockIterator::advance_l() {
             if (res < 0) {
                 // I/O error
 
-                ALOGE("Cluster::Parse returned result %ld", res);
+                LOGE("Cluster::Parse returned result %ld", res);
 
                 mCluster = NULL;
                 break;

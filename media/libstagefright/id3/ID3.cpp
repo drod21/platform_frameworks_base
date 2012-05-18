@@ -129,7 +129,7 @@ struct id3_header {
     }
 
     if (size > kMaxMetadataSize) {
-        ALOGE("skipping huge ID3 metadata of size %d", size);
+        LOGE("skipping huge ID3 metadata of size %d", size);
         return false;
     }
 

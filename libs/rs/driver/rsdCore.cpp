@@ -146,7 +146,7 @@ static void * HelperThreadProc(void *vrsc) {
 
     int status = pthread_setspecific(rsdgThreadTLSKey, &dc->mTlsStruct);
     if (status) {
-        ALOGE("pthread_setspecific %i", status);
+        LOGE("pthread_setspecific %i", status);
     }
 
 #if 0
@@ -156,7 +156,7 @@ static void * HelperThreadProc(void *vrsc) {
     cpuset.bits[idx / 64] |= 1ULL << (idx % 64);
     int ret = syscall(241, rsc->mWorkers.mNativeThreadId[idx],
               sizeof(cpuset), &cpuset);
-    ALOGE("SETAFFINITY ret = %i %s", ret, EGLUtils::strerror(ret));
+    LOGE("SETAFFINITY ret = %i %s", ret, EGLUtils::strerror(ret));
 #endif
 
     while (!dc->mExit) {
@@ -191,7 +191,7 @@ bool rsdHalInit(Context *rsc, uint32_t version_major, uint32_t version_minor) {
 
     RsdHal *dc = (RsdHal *)calloc(1, sizeof(RsdHal));
     if (!dc) {
-        ALOGE("Calloc for driver hal failed.");
+        LOGE("Calloc for driver hal failed.");
         return false;
     }
     rsc->mHal.drv = dc;
@@ -200,7 +200,7 @@ bool rsdHalInit(Context *rsc, uint32_t version_major, uint32_t version_minor) {
     if (!rsdgThreadTLSKeyCount) {
         int status = pthread_key_create(&rsdgThreadTLSKey, NULL);
         if (status) {
-            ALOGE("Failed to init thread tls key.");
+            LOGE("Failed to init thread tls key.");
             pthread_mutex_unlock(&rsdgInitMutex);
             return false;
         }
@@ -214,7 +214,7 @@ bool rsdHalInit(Context *rsc, uint32_t version_major, uint32_t version_minor) {
     dc->mTlsStruct.mScript = NULL;
     int status = pthread_setspecific(rsdgThreadTLSKey, &dc->mTlsStruct);
     if (status) {
-        ALOGE("pthread_setspecific %i", status);
+        LOGE("pthread_setspecific %i", status);
     }
 
 
@@ -236,7 +236,7 @@ bool rsdHalInit(Context *rsc, uint32_t version_major, uint32_t version_minor) {
     pthread_attr_t threadAttr;
     status = pthread_attr_init(&threadAttr);
     if (status) {
-        ALOGE("Failed to init thread attribute.");
+        LOGE("Failed to init thread attribute.");
         return false;
     }
 
@@ -244,7 +244,7 @@ bool rsdHalInit(Context *rsc, uint32_t version_major, uint32_t version_minor) {
         status = pthread_create(&dc->mWorkers.mThreadId[ct], &threadAttr, HelperThreadProc, rsc);
         if (status) {
             dc->mWorkers.mCount = ct;
-            ALOGE("Created fewer than expected number of RS threads.");
+            LOGE("Created fewer than expected number of RS threads.");
             break;
         }
     }

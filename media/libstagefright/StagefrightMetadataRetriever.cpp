@@ -138,7 +138,7 @@ static VideoFrame *extractVideoFrameWithCodecFlags(
     if (seekMode < MediaSource::ReadOptions::SEEK_PREVIOUS_SYNC ||
         seekMode > MediaSource::ReadOptions::SEEK_CLOSEST) {
 
-        ALOGE("Unknown seek mode: %d", seekMode);
+        LOGE("Unknown seek mode: %d", seekMode);
         return NULL;
     }
 
@@ -264,7 +264,7 @@ static VideoFrame *extractVideoFrameWithCodecFlags(
     decoder->stop();
 
     if (err != OK) {
-        ALOGE("Colorconverter failed to convert frame.");
+        LOGE("Colorconverter failed to convert frame.");
 
         delete frame;
         frame = NULL;
@@ -292,7 +292,7 @@ VideoFrame *StagefrightMetadataRetriever::getFrameAtTime(
 
     int32_t drm = 0;
     if (fileMeta->findInt32(kKeyIsDRM, &drm) && drm != 0) {
-        ALOGE("frame grab not allowed.");
+        LOGE("frame grab not allowed.");
         return NULL;
     }
 

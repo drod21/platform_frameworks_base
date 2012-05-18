@@ -131,7 +131,7 @@ status_t NuPlayer::HTTPLiveSource::feedMoreTSData() {
                 status_t err = mTSParser->feedTSPacket(buffer, sizeof(buffer));
 
                 if (err != OK) {
-                    ALOGE("TS Parser returned error %d", err);
+                    LOGE("TS Parser returned error %d", err);
                     mTSParser->signalEOS(err);
                     mFinalResult = err;
                     break;

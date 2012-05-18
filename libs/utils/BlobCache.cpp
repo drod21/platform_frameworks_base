@@ -183,13 +183,13 @@ size_t BlobCache::getFdCount() const {
 status_t BlobCache::flatten(void* buffer, size_t size, int fds[], size_t count)
         const {
     if (count != 0) {
-        ALOGE("flatten: nonzero fd count: %d", count);
+        LOGE("flatten: nonzero fd count: %d", count);
         return BAD_VALUE;
     }
 
     // Write the cache header
     if (size < sizeof(Header)) {
-        ALOGE("flatten: not enough room for cache header");
+        LOGE("flatten: not enough room for cache header");
         return BAD_VALUE;
     }
     Header* header = reinterpret_cast<Header*>(buffer);
@@ -210,7 +210,7 @@ status_t BlobCache::flatten(void* buffer, size_t size, int fds[], size_t count)
 
         size_t entrySize = sizeof(EntryHeader) + keySize + valueSize;
         if (byteOffset + entrySize > size) {
-            ALOGE("flatten: not enough room for cache entries");
+            LOGE("flatten: not enough room for cache entries");
             return BAD_VALUE;
         }
 
@@ -234,18 +234,18 @@ status_t BlobCache::unflatten(void const* buffer, size_t size, int fds[],
     mCacheEntries.clear();
 
     if (count != 0) {
-        ALOGE("unflatten: nonzero fd count: %d", count);
+        LOGE("unflatten: nonzero fd count: %d", count);
         return BAD_VALUE;
     }
 
     // Read the cache header
     if (size < sizeof(Header)) {
-        ALOGE("unflatten: not enough room for cache header");
+        LOGE("unflatten: not enough room for cache header");
         return BAD_VALUE;
     }
     const Header* header = reinterpret_cast<const Header*>(buffer);
     if (header->mMagicNumber != blobCacheMagic) {
-        ALOGE("unflatten: bad magic number: %d", header->mMagicNumber);
+        LOGE("unflatten: bad magic number: %d", header->mMagicNumber);
         return BAD_VALUE;
     }
     if (header->mBlobCacheVersion != blobCacheVersion ||
@@ -261,7 +261,7 @@ status_t BlobCache::unflatten(void const* buffer, size_t size, int fds[],
     for (size_t i = 0; i < numEntries; i++) {
         if (byteOffset + sizeof(EntryHeader) > size) {
             mCacheEntries.clear();
-            ALOGE("unflatten: not enough room for cache entry headers");
+            LOGE("unflatten: not enough room for cache entry headers");
             return BAD_VALUE;
         }
 
@@ -273,7 +273,7 @@ status_t BlobCache::unflatten(void const* buffer, size_t size, int fds[],
 
         if (byteOffset + entrySize > size) {
             mCacheEntries.clear();
-            ALOGE("unflatten: not enough room for cache entry headers");
+            LOGE("unflatten: not enough room for cache entry headers");
             return BAD_VALUE;
         }
 

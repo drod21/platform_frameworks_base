@@ -473,7 +473,7 @@ ssize_t _FileAsset::read(void* buf, size_t count)
         /* read from the file */
         //printf("file read\n");
         if (ftell(mFp) != mStart + mOffset) {
-            ALOGE("Hosed: %ld != %ld+%ld\n",
+            LOGE("Hosed: %ld != %ld+%ld\n",
                 ftell(mFp), (long) mStart, (long) mOffset);
             assert(false);
         }
@@ -581,7 +581,7 @@ const void* _FileAsset::getBuffer(bool wordAligned)
 
         buf = new unsigned char[allocLen];
         if (buf == NULL) {
-            ALOGE("alloc of %ld bytes failed\n", (long) allocLen);
+            LOGE("alloc of %ld bytes failed\n", (long) allocLen);
             return NULL;
         }
 
@@ -590,7 +590,7 @@ const void* _FileAsset::getBuffer(bool wordAligned)
             long oldPosn = ftell(mFp);
             fseek(mFp, mStart, SEEK_SET);
             if (fread(buf, 1, mLength, mFp) != (size_t) mLength) {
-                ALOGE("failed reading %ld bytes\n", (long) mLength);
+                LOGE("failed reading %ld bytes\n", (long) mLength);
                 delete[] buf;
                 return NULL;
             }
@@ -658,7 +658,7 @@ const void* _FileAsset::ensureAlignment(FileMap* map)
             getAssetSource(), (int)mLength);
     unsigned char* buf = new unsigned char[mLength];
     if (buf == NULL) {
-        ALOGE("alloc of %ld bytes failed\n", (long) mLength);
+        LOGE("alloc of %ld bytes failed\n", (long) mLength);
         return NULL;
     }
     memcpy(buf, data, mLength);

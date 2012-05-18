@@ -50,7 +50,7 @@ void BpBinder::ObjectManager::attach(
     e.func = func;
 
     if (mObjects.indexOfKey(objectID) >= 0) {
-        ALOGE("Trying to attach object ID %p to binder ObjectManager %p with object %p, but object ID already in use",
+        LOGE("Trying to attach object ID %p to binder ObjectManager %p with object %p, but object ID already in use",
                 objectID, this,  object);
         return;
     }

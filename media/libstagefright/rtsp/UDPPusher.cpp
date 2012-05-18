@@ -81,7 +81,7 @@ bool UDPPusher::onPush() {
 
     sp<ABuffer> buffer = new ABuffer(length);
     if (fread(buffer->data(), 1, length, mFile) < length) {
-        ALOGE("File truncated?.");
+        LOGE("File truncated?.");
         return false;
     }
 

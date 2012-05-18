@@ -146,7 +146,7 @@ void setGLHooksThreadSpecific(gl_hooks_t const *value) {
 
 static int gl_no_context() {
     if (egl_tls_t::logNoContextCall()) {
-        ALOGE("call to OpenGL ES API with no current context "
+        LOGE("call to OpenGL ES API with no current context "
              "(logged once per thread)");
         char value[PROPERTY_VALUE_MAX];
         property_get("debug.egl.callstack", value, "0");
@@ -292,7 +292,7 @@ EGLBoolean egl_init_drivers() {
 }
 
 void gl_unimplemented() {
-    ALOGE("called unimplemented OpenGL ES API");
+    LOGE("called unimplemented OpenGL ES API");
 }
 
 // ----------------------------------------------------------------------------

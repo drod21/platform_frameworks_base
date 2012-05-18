@@ -185,7 +185,7 @@ android_media_visualizer_native_init(JNIEnv *env)
     // Get the Visualizer class
     jclass clazz = env->FindClass(kClassPathName);
     if (clazz == NULL) {
-        ALOGE("Can't find %s", kClassPathName);
+        LOGE("Can't find %s", kClassPathName);
         return;
     }
 
@@ -196,7 +196,7 @@ android_media_visualizer_native_init(JNIEnv *env)
             fields.clazzEffect,
             "postEventFromNative", "(Ljava/lang/Object;IIILjava/lang/Object;)V");
     if (fields.midPostNativeEvent == NULL) {
-        ALOGE("Can't find Visualizer.%s", "postEventFromNative");
+        LOGE("Can't find Visualizer.%s", "postEventFromNative");
         return;
     }
 
@@ -206,7 +206,7 @@ android_media_visualizer_native_init(JNIEnv *env)
             fields.clazzEffect,
             "mNativeVisualizer", "I");
     if (fields.fidNativeVisualizer == NULL) {
-        ALOGE("Can't find Visualizer.%s", "mNativeVisualizer");
+        LOGE("Can't find Visualizer.%s", "mNativeVisualizer");
         return;
     }
     //      fidJniData;
@@ -214,7 +214,7 @@ android_media_visualizer_native_init(JNIEnv *env)
             fields.clazzEffect,
             "mJniData", "I");
     if (fields.fidJniData == NULL) {
-        ALOGE("Can't find Visualizer.%s", "mJniData");
+        LOGE("Can't find Visualizer.%s", "mJniData");
         return;
     }
 
@@ -233,7 +233,7 @@ android_media_visualizer_native_setup(JNIEnv *env, jobject thiz, jobject weak_th
 
     lpJniStorage = new visualizerJniStorage();
     if (lpJniStorage == NULL) {
-        ALOGE("setup: Error creating JNI Storage");
+        LOGE("setup: Error creating JNI Storage");
         goto setup_failure;
     }
 
@@ -248,7 +248,7 @@ android_media_visualizer_native_setup(JNIEnv *env, jobject thiz, jobject weak_th
             &lpJniStorage->mCallbackData);
 
     if (jId == NULL) {
-        ALOGE("setup: NULL java array for id pointer");
+        LOGE("setup: NULL java array for id pointer");
         lStatus = VISUALIZER_ERROR_BAD_VALUE;
         goto setup_failure;
     }
@@ -259,19 +259,19 @@ android_media_visualizer_native_setup(JNIEnv *env, jobject thiz, jobject weak_th
                                   NULL,
                                   sessionId);
     if (lpVisualizer == NULL) {
-        ALOGE("Error creating Visualizer");
+        LOGE("Error creating Visualizer");
         goto setup_failure;
     }
 
     lStatus = translateError(lpVisualizer->initCheck());
     if (lStatus != VISUALIZER_SUCCESS && lStatus != VISUALIZER_ERROR_ALREADY_EXISTS) {
-        ALOGE("Visualizer initCheck failed %d", lStatus);
+        LOGE("Visualizer initCheck failed %d", lStatus);
         goto setup_failure;
     }
 
     nId = (jint *) env->GetPrimitiveArrayCritical(jId, NULL);
     if (nId == NULL) {
-        ALOGE("setup: Error retrieving id pointer");
+        LOGE("setup: Error retrieving id pointer");
         lStatus = VISUALIZER_ERROR_BAD_VALUE;
         goto setup_failure;
     }

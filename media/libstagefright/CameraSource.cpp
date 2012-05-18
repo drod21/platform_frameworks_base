@@ -111,7 +111,7 @@ static int32_t getColorFormat(const char* colorFormat) {
        return OMX_TI_COLOR_FormatYUV420PackedSemiPlanar;
     }
 
-    ALOGE("Uknown color format (%s), please add it to "
+    LOGE("Uknown color format (%s), please add it to "
          "CameraSource::getColorFormat", colorFormat);
 
     CHECK_EQ(0, "Unknown color format");
@@ -301,7 +301,7 @@ status_t CameraSource::configureCamera(
     bool isCameraParamChanged = false;
     if (width != -1 && height != -1) {
         if (!isVideoSizeSupported(width, height, sizes)) {
-            ALOGE("Video dimension (%dx%d) is unsupported", width, height);
+            LOGE("Video dimension (%dx%d) is unsupported", width, height);
             return BAD_VALUE;
         }
         if (isSetVideoSizeSupportedByCamera) {
@@ -314,7 +314,7 @@ status_t CameraSource::configureCamera(
                (width != -1 && height == -1)) {
         // If one and only one of the width and height is -1
         // we reject such a request.
-        ALOGE("Requested video size (%dx%d) is not supported", width, height);
+        LOGE("Requested video size (%dx%d) is not supported", width, height);
         return BAD_VALUE;
     } else {  // width == -1 && height == -1
         // Do not configure the camera.
@@ -330,7 +330,7 @@ status_t CameraSource::configureCamera(
         char buf[4];
         snprintf(buf, 4, "%d", frameRate);
         if (strstr(supportedFrameRates, buf) == NULL) {
-            ALOGE("Requested frame rate (%d) is not supported: %s",
+            LOGE("Requested frame rate (%d) is not supported: %s",
                 frameRate, supportedFrameRates);
             return BAD_VALUE;
         }
@@ -347,7 +347,7 @@ status_t CameraSource::configureCamera(
         // Either frame rate or frame size needs to be changed.
         String8 s = params->flatten();
         if (OK != mCamera->setParameters(s)) {
-            ALOGE("Could not change settings."
+            LOGE("Could not change settings."
                  " Someone else is using camera %p?", mCamera.get());
             return -EBUSY;
         }
@@ -387,7 +387,7 @@ status_t CameraSource::checkVideoSize(
         params.getVideoSize(&frameWidthActual, &frameHeightActual);
     }
     if (frameWidthActual < 0 || frameHeightActual < 0) {
-        ALOGE("Failed to retrieve video frame size (%dx%d)",
+        LOGE("Failed to retrieve video frame size (%dx%d)",
                 frameWidthActual, frameHeightActual);
         return UNKNOWN_ERROR;
     }
@@ -396,7 +396,7 @@ status_t CameraSource::checkVideoSize(
     // video frame size.
     if (width != -1 && height != -1) {
         if (frameWidthActual != width || frameHeightActual != height) {
-            ALOGE("Failed to set video frame size to %dx%d. "
+            LOGE("Failed to set video frame size to %dx%d. "
                     "The actual video size is %dx%d ", width, height,
                     frameWidthActual, frameHeightActual);
             return UNKNOWN_ERROR;
@@ -425,14 +425,14 @@ status_t CameraSource::checkFrameRate(
     ALOGV("checkFrameRate");
     int32_t frameRateActual = params.getPreviewFrameRate();
     if (frameRateActual < 0) {
-        ALOGE("Failed to retrieve preview frame rate (%d)", frameRateActual);
+        LOGE("Failed to retrieve preview frame rate (%d)", frameRateActual);
         return UNKNOWN_ERROR;
     }
 
     // Check the actual video frame rate against the target/requested
     // video frame rate.
     if (frameRate != -1 && (frameRateActual - frameRate) != 0) {
-        ALOGE("Failed to set preview frame rate to %d fps. The actual "
+        LOGE("Failed to set preview frame rate to %d fps. The actual "
                 "frame rate is %d", frameRate, frameRateActual);
         return UNKNOWN_ERROR;
     }
@@ -489,7 +489,7 @@ status_t CameraSource::initWithCameraAccess(
     status_t err = OK;
 
     if ((err = isCameraAvailable(camera, proxy, cameraId)) != OK) {
-        ALOGE("Camera connection could not be established.");
+        LOGE("Camera connection could not be established.");
         return err;
     }
     CameraParameters params(mCamera->getParameters());
@@ -579,7 +579,7 @@ status_t CameraSource::start(MetaData *meta) {
     ALOGV("start");
     CHECK(!mStarted);
     if (mInitCheck != OK) {
-        ALOGE("CameraSource is not initialized yet");
+        LOGE("CameraSource is not initialized yet");
         return mInitCheck;
     }
 

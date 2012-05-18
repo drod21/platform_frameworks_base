@@ -344,7 +344,7 @@ ssize_t SimpleBestFitAllocator::alloc(size_t size, uint32_t flags)
                 mList.insertBefore(free_chunk, split);
             }
 
-            ALOGE_IF((flags&PAGE_ALIGNED) && 
+            LOGE_IF((flags&PAGE_ALIGNED) && 
                     ((free_chunk->start*kMemoryAlign)&(pagesize-1)),
                     "PAGE_ALIGNED requested, but page is not aligned!!!");
 

@@ -770,7 +770,7 @@ public:
         value = TextLayoutCache::getInstance().getValue(paint, textArray, start, count,
                 contextCount, flags);
         if (value == NULL) {
-            ALOGE("Cannot get TextLayoutCache value");
+            LOGE("Cannot get TextLayoutCache value");
             return ;
         }
 #else

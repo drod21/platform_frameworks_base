@@ -307,14 +307,14 @@ int NativeInputQueue::handleReceiveCallback(int receiveFd, int events, void* dat
 
         ssize_t connectionIndex = q->mConnectionsByReceiveFd.indexOfKey(receiveFd);
         if (connectionIndex < 0) {
-            ALOGE("Received spurious receive callback for unknown input channel.  "
+            LOGE("Received spurious receive callback for unknown input channel.  "
                     "fd=%d, events=0x%x", receiveFd, events);
             return 0; // remove the callback
         }
 
         connection = q->mConnectionsByReceiveFd.valueAt(connectionIndex);
         if (events & (ALOOPER_EVENT_ERROR | ALOOPER_EVENT_HANGUP)) {
-            ALOGE("channel '%s' ~ Publisher closed input channel or an error occurred.  "
+            LOGE("channel '%s' ~ Publisher closed input channel or an error occurred.  "
                     "events=0x%x", connection->getInputChannelName(), events);
             return 0; // remove the callback
         }
@@ -327,7 +327,7 @@ int NativeInputQueue::handleReceiveCallback(int receiveFd, int events, void* dat
 
         status_t status = connection->inputConsumer.receiveDispatchSignal();
         if (status) {
-            ALOGE("channel '%s' ~ Failed to receive dispatch signal.  status=%d",
+            LOGE("channel '%s' ~ Failed to receive dispatch signal.  status=%d",
                     connection->getInputChannelName(), status);
             return 0; // remove the callback
         }
@@ -409,7 +409,7 @@ int NativeInputQueue::handleReceiveCallback(int receiveFd, int events, void* dat
 #endif
 
     if (env->ExceptionCheck()) {
-        ALOGE("An exception occurred while invoking the input handler for an event.");
+        LOGE("An exception occurred while invoking the input handler for an event.");
         LOGE_EX(env);
         env->ExceptionClear();
 

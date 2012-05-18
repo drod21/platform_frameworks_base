@@ -48,7 +48,7 @@ GLuint loadShader(GLenum shaderType, const char* pSource) {
                 char* buf = (char*) malloc(infoLen);
                 if (buf) {
                     glGetShaderInfoLog(shader, infoLen, NULL, buf);
-                    ALOGE("Could not compile shader %d:\n%s\n",
+                    LOGE("Could not compile shader %d:\n%s\n",
                             shaderType, buf);
                     free(buf);
                 }
@@ -87,7 +87,7 @@ GLuint createProgram(const char* pVertexSource, const char* pFragmentSource) {
                 char* buf = (char*) malloc(bufLength);
                 if (buf) {
                     glGetProgramInfoLog(program, bufLength, NULL, buf);
-                    ALOGE("Could not link program:\n%s\n", buf);
+                    LOGE("Could not link program:\n%s\n", buf);
                     free(buf);
                 }
             }
@@ -110,7 +110,7 @@ bool setupGraphics(int w, int h) {
     ALOGI("setupGraphics(%d, %d)", w, h);
     gProgram = createProgram(gVertexShader, gFragmentShader);
     if (!gProgram) {
-        ALOGE("Could not create program.");
+        LOGE("Could not create program.");
         return false;
     }
     gvPositionHandle = glGetAttribLocation(gProgram, "vPosition");

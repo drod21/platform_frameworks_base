@@ -81,7 +81,7 @@ JNIEXPORT void JNICALL Java_com_android_glperf_GLPerfLib_init(JNIEnv * env, jobj
             ALOGI("Writing to: %s\n",fileName);
             fOut = fopen(fileName, "w");
             if (fOut == NULL) {
-                ALOGE("Could not open: %s\n", fileName);
+                LOGE("Could not open: %s\n", fileName);
             }
 
             ALOGI("\nvarColor, texCount, modulate, extraMath, texSize, blend, Mpps, DC60\n");

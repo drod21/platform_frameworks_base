@@ -116,7 +116,7 @@ status_t SoftAAC::initDecoder() {
 
     Int err = PVMP4AudioDecoderInitLibrary(mConfig, mDecoderBuf);
     if (err != MP4AUDEC_SUCCESS) {
-        ALOGE("Failed to initialize MP4 audio decoder");
+        LOGE("Failed to initialize MP4 audio decoder");
         return UNKNOWN_ERROR;
     }
 

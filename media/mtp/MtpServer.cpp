@@ -179,7 +179,7 @@ void MtpServer::run() {
         if (dataIn) {
             int ret = mData.read(fd);
             if (ret < 0) {
-                ALOGE("data read returned %d, errno: %d", ret, errno);
+                LOGE("data read returned %d, errno: %d", ret, errno);
                 if (errno == ECANCELED) {
                     // return to top of loop and wait for next command
                     continue;
@@ -200,7 +200,7 @@ void MtpServer::run() {
                 mData.dump();
                 ret = mData.write(fd);
                 if (ret < 0) {
-                    ALOGE("request write returned %d, errno: %d", ret, errno);
+                    LOGE("request write returned %d, errno: %d", ret, errno);
                     if (errno == ECANCELED) {
                         // return to top of loop and wait for next command
                         continue;
@@ -214,7 +214,7 @@ void MtpServer::run() {
             ret = mResponse.write(fd);
             mResponse.dump();
             if (ret < 0) {
-                ALOGE("request write returned %d, errno: %d", ret, errno);
+                LOGE("request write returned %d, errno: %d", ret, errno);
                 if (errno == ECANCELED) {
                     // return to top of loop and wait for next command
                     continue;
@@ -296,7 +296,7 @@ void MtpServer::removeEditObject(MtpObjectHandle handle) {
             return;
         }
     }
-    ALOGE("ObjectEdit not found in removeEditObject");
+    LOGE("ObjectEdit not found in removeEditObject");
 }
 
 void MtpServer::commitEdit(ObjectEdit* edit) {
@@ -314,7 +314,7 @@ bool MtpServer::handleRequest() {
 
     if (mSendObjectHandle != kInvalidObjectHandle && operation != MTP_OPERATION_SEND_OBJECT) {
         // FIXME - need to delete mSendObjectHandle from the database
-        ALOGE("expected SendObject after SendObjectInfo");
+        LOGE("expected SendObject after SendObjectInfo");
         mSendObjectHandle = kInvalidObjectHandle;
     }
 
@@ -408,7 +408,7 @@ bool MtpServer::handleRequest() {
             response = doEndEditObject();
             break;
         default:
-            ALOGE("got unsupported command %s", MtpDebug::getOperationCodeName(operation));
+            LOGE("got unsupported command %s", MtpDebug::getOperationCodeName(operation));
             response = MTP_RESPONSE_OPERATION_NOT_SUPPORTED;
             break;
     }
@@ -917,7 +917,7 @@ MtpResponseCode MtpServer::doSendObject() {
     int ret, initialData;
 
     if (mSendObjectHandle == kInvalidObjectHandle) {
-        ALOGE("Expected SendObjectInfo before SendObject");
+        LOGE("Expected SendObjectInfo before SendObject");
         result = MTP_RESPONSE_NO_VALID_OBJECT_INFO;
         goto done;
     }
@@ -984,7 +984,7 @@ static void deleteRecursive(const char* path) {
     char pathbuf[PATH_MAX];
     int pathLength = strlen(path);
     if (pathLength >= sizeof(pathbuf) - 1) {
-        ALOGE("path too long: %s\n", path);
+        LOGE("path too long: %s\n", path);
     }
     strcpy(pathbuf, path);
     if (pathbuf[pathLength - 1] != '/') {
@@ -995,7 +995,7 @@ static void deleteRecursive(const char* path) {
 
     DIR* dir = opendir(path);
     if (!dir) {
-        ALOGE("opendir %s failed: %s", path, strerror(errno));
+        LOGE("opendir %s failed: %s", path, strerror(errno));
         return;
     }
 
@@ -1010,7 +1010,7 @@ static void deleteRecursive(const char* path) {
 
         int nameLength = strlen(name);
         if (nameLength > pathRemaining) {
-            ALOGE("path %s/%s too long\n", path, name);
+            LOGE("path %s/%s too long\n", path, name);
             continue;
         }
         strcpy(fileSpot, name);
@@ -1036,7 +1036,7 @@ static void deletePath(const char* path) {
             unlink(path);
         }
     } else {
-        ALOGE("deletePath stat failed for %s: %s", path, strerror(errno));
+        LOGE("deletePath stat failed for %s: %s", path, strerror(errno));
     }
 }
 
@@ -1098,7 +1098,7 @@ MtpResponseCode MtpServer::doSendPartialObject() {
 
     ObjectEdit* edit = getEditObject(handle);
     if (!edit) {
-        ALOGE("object not open for edit in doSendPartialObject");
+        LOGE("object not open for edit in doSendPartialObject");
         return MTP_RESPONSE_GENERAL_ERROR;
     }
 
@@ -1155,7 +1155,7 @@ MtpResponseCode MtpServer::doTruncateObject() {
     MtpObjectHandle handle = mRequest.getParameter(1);
     ObjectEdit* edit = getEditObject(handle);
     if (!edit) {
-        ALOGE("object not open for edit in doTruncateObject");
+        LOGE("object not open for edit in doTruncateObject");
         return MTP_RESPONSE_GENERAL_ERROR;
     }
 
@@ -1173,7 +1173,7 @@ MtpResponseCode MtpServer::doTruncateObject() {
 MtpResponseCode MtpServer::doBeginEditObject() {
     MtpObjectHandle handle = mRequest.getParameter(1);
     if (getEditObject(handle)) {
-        ALOGE("object already open for edit in doBeginEditObject");
+        LOGE("object already open for edit in doBeginEditObject");
         return MTP_RESPONSE_GENERAL_ERROR;
     }
 
@@ -1186,7 +1186,7 @@ MtpResponseCode MtpServer::doBeginEditObject() {
 
     int fd = open((const char *)path, O_RDWR | O_EXCL);
     if (fd < 0) {
-        ALOGE("open failed for %s in doBeginEditObject (%d)", (const char *)path, errno);
+        LOGE("open failed for %s in doBeginEditObject (%d)", (const char *)path, errno);
         return MTP_RESPONSE_GENERAL_ERROR;
     }
 
@@ -1198,7 +1198,7 @@ MtpResponseCode MtpServer::doEndEditObject() {
     MtpObjectHandle handle = mRequest.getParameter(1);
     ObjectEdit* edit = getEditObject(handle);
     if (!edit) {
-        ALOGE("object not open for edit in doEndEditObject");
+        LOGE("object not open for edit in doEndEditObject");
         return MTP_RESPONSE_GENERAL_ERROR;
     }
 

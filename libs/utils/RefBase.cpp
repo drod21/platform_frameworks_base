@@ -98,7 +98,7 @@ public:
 #if DEBUG_REFS_FATAL_SANITY_CHECKS
             LOG_ALWAYS_FATAL("Strong references remain!");
 #else
-            ALOGE("Strong references remain:");
+            LOGE("Strong references remain:");
 #endif
             ref_entry* refs = mStrongRefs;
             while (refs) {
@@ -116,7 +116,7 @@ public:
 #if DEBUG_REFS_FATAL_SANITY_CHECKS
             LOG_ALWAYS_FATAL("Weak references remain:");
 #else
-            ALOGE("Weak references remain!");
+            LOGE("Weak references remain!");
 #endif
             ref_entry* refs = mWeakRefs;
             while (refs) {
@@ -129,7 +129,7 @@ public:
             }
         }
         if (dumpStack) {
-            ALOGE("above errors at:");
+            LOGE("above errors at:");
             CallStack stack;
             stack.update();
             stack.dump();
@@ -205,7 +205,7 @@ public:
                 close(rc);
                 ALOGD("STACK TRACE for %p saved in %s", this, name);
             }
-            else ALOGE("FAILED TO PRINT STACK TRACE for %p in %s: %s", this,
+            else LOGE("FAILED TO PRINT STACK TRACE for %p in %s: %s", this,
                       name, strerror(errno));
         }
     }
@@ -263,7 +263,7 @@ private:
                     id, mBase, this);
 #endif
 
-            ALOGE("RefBase: removing id %p on RefBase %p"
+            LOGE("RefBase: removing id %p on RefBase %p"
                     "(weakref_type %p) that doesn't exist!",
                     id, mBase, this);
 

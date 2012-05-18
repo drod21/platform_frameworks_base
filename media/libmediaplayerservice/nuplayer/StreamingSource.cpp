@@ -70,7 +70,7 @@ status_t NuPlayer::StreamingSource::feedMoreTSData() {
                     && extra->findInt32(
                         IStreamListener::kKeyDiscontinuityMask, &mask)) {
                 if (mask == 0) {
-                    ALOGE("Client specified an illegal discontinuity type.");
+                    LOGE("Client specified an illegal discontinuity type.");
                     return ERROR_UNSUPPORTED;
                 }
 
@@ -94,7 +94,7 @@ status_t NuPlayer::StreamingSource::feedMoreTSData() {
                 status_t err = mTSParser->feedTSPacket(buffer, sizeof(buffer));
 
                 if (err != OK) {
-                    ALOGE("TS Parser returned error %d", err);
+                    LOGE("TS Parser returned error %d", err);
 
                     mTSParser->signalEOS(err);
                     mFinalResult = err;

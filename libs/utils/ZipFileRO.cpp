@@ -527,7 +527,7 @@ bool ZipFileRO::getEntryInfo(ZipEntryRO entry, int* pMethod, size_t* pUncompLen,
     if (pOffset != NULL) {
         long localHdrOffset = get4LE(ptr + kCDELocalOffset);
         if (localHdrOffset + kLFHLen >= cdOffset) {
-            ALOGE("ERROR: bad local hdr offset in zip\n");
+            LOGE("ERROR: bad local hdr offset in zip\n");
             return false;
         }
 
@@ -605,7 +605,7 @@ bool ZipFileRO::getEntryInfo(ZipEntryRO entry, int* pMethod, size_t* pUncompLen,
         if (method == kCompressStored &&
             (off64_t)(dataOffset + uncompLen) > cdOffset)
         {
-            ALOGE("ERROR: bad uncompressed length in zip (%ld + " ZD " > %ld)\n",
+            LOGE("ERROR: bad uncompressed length in zip (%ld + " ZD " > %ld)\n",
                 (long) dataOffset, (ZD_TYPE) uncompLen, (long) cdOffset);
             return false;
         }
@@ -754,10 +754,10 @@ bool ZipFileRO::uncompressEntry(ZipEntryRO entry, int fd) const
     if (method == kCompressStored) {
         ssize_t actual = write(fd, ptr, uncompLen);
         if (actual < 0) {
-            ALOGE("Write failed: %s\n", strerror(errno));
+            LOGE("Write failed: %s\n", strerror(errno));
             goto unmap;
         } else if ((size_t) actual != uncompLen) {
-            ALOGE("Partial write during uncompress (" ZD " of " ZD ")\n",
+            LOGE("Partial write during uncompress (" ZD " of " ZD ")\n",
                 (ZD_TYPE) actual, (ZD_TYPE) uncompLen);
             goto unmap;
         } else {
@@ -806,10 +806,10 @@ bail:
     zerr = inflateInit2(&zstream, -MAX_WBITS);
     if (zerr != Z_OK) {
         if (zerr == Z_VERSION_ERROR) {
-            ALOGE("Installed zlib is not compatible with linked version (%s)\n",
+            LOGE("Installed zlib is not compatible with linked version (%s)\n",
                 ZLIB_VERSION);
         } else {
-            ALOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
+            LOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
         }
         goto bail;
     }
@@ -873,10 +873,10 @@ bail:
     zerr = inflateInit2(&zstream, -MAX_WBITS);
     if (zerr != Z_OK) {
         if (zerr == Z_VERSION_ERROR) {
-            ALOGE("Installed zlib is not compatible with linked version (%s)\n",
+            LOGE("Installed zlib is not compatible with linked version (%s)\n",
                 ZLIB_VERSION);
         } else {
-            ALOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
+            LOGE("Call to inflateInit2 failed (zerr=%d)\n", zerr);
         }
         goto bail;
     }
