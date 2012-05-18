@@ -143,7 +143,7 @@ again:
 
         if (rc < 0) {
             if (errno == EBUSY) {
-                ALOGI("read() error %s (%d): repeating read()...",
+                LOGI("read() error %s (%d): repeating read()...",
                      strerror(errno), errno);
                 goto again;
             }
@@ -208,7 +208,7 @@ static void initializeNativeDataNative(JNIEnv* env, jobject object,
     nat->rfcomm_sock = socketFd;
     nat->rfcomm_connected = socketFd >= 0;
     if (nat->rfcomm_connected)
-        ALOGI("%s: ALREADY CONNECTED!", __FUNCTION__);
+        LOGI("%s: ALREADY CONNECTED!", __FUNCTION__);
 #endif
 }
 
@@ -310,7 +310,7 @@ static jint connectAsyncNative(JNIEnv *env, jobject obj) {
             close(nat->rfcomm_sock);
             return -1;
         }
-        ALOGI("Created RFCOMM socket fd %d.", nat->rfcomm_sock);
+        LOGI("Created RFCOMM socket fd %d.", nat->rfcomm_sock);
     }
 
     memset(&addr, 0, sizeof(struct sockaddr_rc));
@@ -330,13 +330,13 @@ static jint connectAsyncNative(JNIEnv *env, jobject obj) {
 
             if (rc >= 0) {
                 nat->rfcomm_connected = 1;
-                ALOGI("async connect successful");
+                LOGI("async connect successful");
                 return 0;
             }
             else if (rc < 0) {
                 if (errno == EINPROGRESS || errno == EAGAIN)
                 {
-                    ALOGI("async connect is in progress (%s)",
+                    LOGI("async connect is in progress (%s)",
                          strerror(errno));
                     nat->rfcomm_connected = -1;
                     return 0;
@@ -365,19 +365,19 @@ static jint waitForAsyncConnectNative(JNIEnv *env, jobject obj,
     env->SetIntField(obj, field_mTimeoutRemainingMs, timeout_ms);
 
     if (nat->rfcomm_connected > 0) {
-        ALOGI("RFCOMM is already connected!");
+        LOGI("RFCOMM is already connected!");
         return 1;
     }
 
     if (nat->rfcomm_sock >= 0 && nat->rfcomm_connected == 0) {
-        ALOGI("Re-opening RFCOMM socket.");
+        LOGI("Re-opening RFCOMM socket.");
         close(nat->rfcomm_sock);
         nat->rfcomm_sock = -1;
     }
     int ret = connectAsyncNative(env, obj);
 
     if (ret < 0) {
-        ALOGI("Failed to re-open RFCOMM socket!");
+        LOGI("Failed to re-open RFCOMM socket!");
         return ret;
     }
 
@@ -451,7 +451,7 @@ static jint waitForAsyncConnectNative(JNIEnv *env, jobject obj,
             }
             /* Restore the blocking properties of the socket. */
             fcntl(nat->rfcomm_sock, F_SETFL, nat->rfcomm_sock_flags);
-            ALOGI("Successful RFCOMM socket connect.");
+            LOGI("Successful RFCOMM socket connect.");
             nat->rfcomm_connected = 1;
             return 1;
         }

@@ -624,7 +624,7 @@ bool ARTSPConnection::receiveRTSPReponse() {
     sp<ARTSPResponse> response = new ARTSPResponse;
     response->mStatusLine = statusLine;
 
-    ALOGI("status: %s", response->mStatusLine.c_str());
+    LOGI("status: %s", response->mStatusLine.c_str());
 
     ssize_t space1 = response->mStatusLine.find(" ");
     if (space1 < 0) {
@@ -740,7 +740,7 @@ bool ARTSPConnection::receiveRTSPReponse() {
             msg->setMessage("reply", reply);
             msg->setString("request", request.c_str(), request.size());
 
-            ALOGI("re-sending request with authentication headers...");
+            LOGI("re-sending request with authentication headers...");
             onSendRequest(msg);
 
             return true;

@@ -232,7 +232,7 @@ void MtpDevice::print() {
         mDeviceInfo->print();
 
         if (mDeviceInfo->mDeviceProperties) {
-            ALOGI("***** DEVICE PROPERTIES *****\n");
+            LOGI("***** DEVICE PROPERTIES *****\n");
             int count = mDeviceInfo->mDeviceProperties->size();
             for (int i = 0; i < count; i++) {
                 MtpDeviceProperty propCode = (*mDeviceInfo->mDeviceProperties)[i];
@@ -246,11 +246,11 @@ void MtpDevice::print() {
     }
 
     if (mDeviceInfo->mPlaybackFormats) {
-            ALOGI("***** OBJECT PROPERTIES *****\n");
+            LOGI("***** OBJECT PROPERTIES *****\n");
         int count = mDeviceInfo->mPlaybackFormats->size();
         for (int i = 0; i < count; i++) {
             MtpObjectFormat format = (*mDeviceInfo->mPlaybackFormats)[i];
-            ALOGI("*** FORMAT: %s\n", MtpDebug::getFormatCodeName(format));
+            LOGI("*** FORMAT: %s\n", MtpDebug::getFormatCodeName(format));
             MtpObjectPropertyList* props = getObjectPropsSupported(format);
             if (props) {
                 for (int j = 0; j < props->size(); j++) {

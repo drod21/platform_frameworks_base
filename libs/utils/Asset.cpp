@@ -89,7 +89,7 @@ Asset::Asset(void)
   	    gTail->mNext = this;
   	    gTail = this;
   	}
-    //ALOGI("Creating Asset %p #%d\n", this, gCount);
+    //LOGI("Creating Asset %p #%d\n", this, gCount);
 }
 
 Asset::~Asset(void)
@@ -109,7 +109,7 @@ Asset::~Asset(void)
         mPrev->mNext = mNext;
     }
     mNext = mPrev = NULL;
-    //ALOGI("Destroying Asset in %p #%d\n", this, gCount);
+    //LOGI("Destroying Asset in %p #%d\n", this, gCount);
 }
 
 /*

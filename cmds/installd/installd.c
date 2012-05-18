@@ -200,7 +200,7 @@ static int execute(int s, char cmd[BUFFER_MAX])
     unsigned short count;
     int ret = -1;
 
-//    ALOGI("execute('%s')\n", cmd);
+//    LOGI("execute('%s')\n", cmd);
 
         /* default reply is "" */
     reply[0] = 0;
@@ -242,7 +242,7 @@ done:
     if (n > BUFFER_MAX) n = BUFFER_MAX;
     count = n;
 
-//    ALOGI("reply: '%s'\n", cmd);
+//    LOGI("reply: '%s'\n", cmd);
     if (writex(s, &count, sizeof(count))) return -1;
     if (writex(s, cmd, count)) return -1;
     return 0;
@@ -380,7 +380,7 @@ int main(const int argc, const char *argv[]) {
         }
         fcntl(s, F_SETFD, FD_CLOEXEC);
 
-        ALOGI("new connection\n");
+        LOGI("new connection\n");
         for (;;) {
             unsigned short count;
             if (readx(s, &count, sizeof(count))) {
@@ -398,7 +398,7 @@ int main(const int argc, const char *argv[]) {
             buf[count] = 0;
             if (execute(s, buf)) break;
         }
-        ALOGI("closing connection\n");
+        LOGI("closing connection\n");
         close(s);
     }
 

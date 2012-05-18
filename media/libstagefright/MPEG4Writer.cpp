@@ -406,7 +406,7 @@ int64_t MPEG4Writer::estimateMoovBoxSize(int32_t bitRate) {
         size = MAX_MOOV_BOX_SIZE;
     }
 
-    ALOGI("limits: %lld/%lld bytes/us, bit rate: %d bps and the estimated"
+    LOGI("limits: %lld/%lld bytes/us, bit rate: %d bps and the estimated"
          " moov size %lld bytes",
          mMaxFileSizeLimitBytes, mMaxFileDurationLimitUs, bitRate, size);
     return factor * size;
@@ -701,7 +701,7 @@ status_t MPEG4Writer::stop() {
         mMoovBoxBuffer = NULL;
         mMoovBoxBufferOffset = 0;
     } else {
-        ALOGI("The mp4 file will not be streamable.");
+        LOGI("The mp4 file will not be streamable.");
     }
 
     CHECK(mBoxes.empty());
@@ -1084,12 +1084,12 @@ bool MPEG4Writer::reachedEOS() {
 }
 
 void MPEG4Writer::setStartTimestampUs(int64_t timeUs) {
-    ALOGI("setStartTimestampUs: %lld", timeUs);
+    LOGI("setStartTimestampUs: %lld", timeUs);
     CHECK(timeUs >= 0);
     Mutex::Autolock autoLock(mLock);
     if (mStartTimestampUs < 0 || mStartTimestampUs > timeUs) {
         mStartTimestampUs = timeUs;
-        ALOGI("Earliest track starting time: %lld", mStartTimestampUs);
+        LOGI("Earliest track starting time: %lld", mStartTimestampUs);
     }
 }
 
@@ -1481,7 +1481,7 @@ status_t MPEG4Writer::Track::start(MetaData *params) {
             startTimeOffsetUs = kInitialDelayTimeUs;
         }
         startTimeUs += startTimeOffsetUs;
-        ALOGI("Start time offset: %lld us", startTimeOffsetUs);
+        LOGI("Start time offset: %lld us", startTimeOffsetUs);
     }
 
     meta->setInt64(kKeyTime, startTimeUs);
@@ -2146,10 +2146,10 @@ status_t MPEG4Writer::Track::threadEntry() {
 
     sendTrackSummary(hasMultipleTracks);
 
-    ALOGI("Received total/0-length (%d/%d) buffers and encoded %d frames. - %s",
+    LOGI("Received total/0-length (%d/%d) buffers and encoded %d frames. - %s",
             count, nZeroLengthFrames, mNumSamples, mIsAudio? "audio": "video");
     if (mIsAudio) {
-        ALOGI("Audio track drift time: %lld us", mOwner->getDriftTimeUs());
+        LOGI("Audio track drift time: %lld us", mOwner->getDriftTimeUs());
     }
 
     if (err == ERROR_END_OF_STREAM) {

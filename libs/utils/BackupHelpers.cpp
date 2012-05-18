@@ -628,7 +628,7 @@ int write_tarfile(const String8& packageName, const String8& domain,
 
     // [ 329 : 8 ] and [ 337 : 8 ] devmajor/devminor, not used
 
-    ALOGI("   Name: %s", fullname.string());
+    LOGI("   Name: %s", fullname.string());
 
     // If we're using a pax extended header, build & write that here; lengths are
     // already preflighted

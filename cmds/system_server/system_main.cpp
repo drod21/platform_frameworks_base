@@ -44,7 +44,7 @@ static void blockSignals()
 
 int main(int argc, const char* const argv[])
 {
-    ALOGI("System server is starting with pid=%d.\n", getpid());
+    LOGI("System server is starting with pid=%d.\n", getpid());
 
     blockSignals();
     

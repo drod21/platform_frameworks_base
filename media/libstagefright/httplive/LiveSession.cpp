@@ -168,9 +168,9 @@ void LiveSession::onConnect(const sp<AMessage> &msg) {
     }
 
     if (!(mFlags & kFlagIncognito)) {
-        ALOGI("onConnect '%s'", url.c_str());
+        LOGI("onConnect '%s'", url.c_str());
     } else {
-        ALOGI("onConnect <URL suppressed>");
+        LOGI("onConnect <URL suppressed>");
     }
 
     mMasterURL = url;
@@ -207,7 +207,7 @@ void LiveSession::onConnect(const sp<AMessage> &msg) {
 }
 
 void LiveSession::onDisconnect() {
-    ALOGI("onDisconnect");
+    LOGI("onDisconnect");
 
     mDataSource->queueEOS(ERROR_END_OF_STREAM);
 
@@ -572,7 +572,7 @@ rinse_repeat:
                 int32_t newSeqNumber = firstSeqNumberInPlaylist + index;
 
                 if (newSeqNumber != mSeqNumber) {
-                    ALOGI("seeking to seq no %d", newSeqNumber);
+                    LOGI("seeking to seq no %d", newSeqNumber);
 
                     mSeqNumber = newSeqNumber;
 
@@ -609,7 +609,7 @@ rinse_repeat:
         if (mPrevBandwidthIndex != (ssize_t)bandwidthIndex) {
             // Go back to the previous bandwidth.
 
-            ALOGI("new bandwidth does not have the sequence number "
+            LOGI("new bandwidth does not have the sequence number "
                  "we're looking for, switching back to previous bandwidth");
 
             mLastPlaylistFetchTimeUs = -1;
@@ -629,7 +629,7 @@ rinse_repeat:
             // we've missed the boat, let's start from the lowest sequence
             // number available and signal a discontinuity.
 
-            ALOGI("We've missed the boat, restarting playback.");
+            LOGI("We've missed the boat, restarting playback.");
             mSeqNumber = lastSeqNumberInPlaylist;
             explicitDiscontinuity = true;
 
@@ -690,7 +690,7 @@ rinse_repeat:
             return;
         }
 
-        ALOGI("Retrying with a different bandwidth stream.");
+        LOGI("Retrying with a different bandwidth stream.");
 
         mLastPlaylistFetchTimeUs = -1;
         bandwidthIndex = getBandwidthIndex();
@@ -713,7 +713,7 @@ rinse_repeat:
     if (seekDiscontinuity || explicitDiscontinuity || bandwidthChanged) {
         // Signal discontinuity.
 
-        ALOGI("queueing discontinuity (seek=%d, explicit=%d, bandwidthChanged=%d)",
+        LOGI("queueing discontinuity (seek=%d, explicit=%d, bandwidthChanged=%d)",
              seekDiscontinuity, explicitDiscontinuity, bandwidthChanged);
 
         sp<ABuffer> tmp = new ABuffer(188);

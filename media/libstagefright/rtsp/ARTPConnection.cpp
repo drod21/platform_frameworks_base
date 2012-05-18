@@ -396,7 +396,7 @@ status_t ARTPConnection::receive(StreamInfo *s, bool receiveRTP) {
 
     buffer->setRange(0, nbytes);
 
-    // ALOGI("received %d bytes.", buffer->size());
+    // LOGI("received %d bytes.", buffer->size());
 
     status_t err;
     if (receiveRTP) {
@@ -606,7 +606,7 @@ status_t ARTPConnection::parseSR(
     uint32_t rtpTime = u32at(&data[16]);
 
 #if 0
-    ALOGI("XXX timeUpdate: ssrc=0x%08x, rtpTime %u == ntpTime %.3f",
+    LOGI("XXX timeUpdate: ssrc=0x%08x, rtpTime %u == ntpTime %.3f",
          id,
          rtpTime,
          (ntpTime >> 32) + (double)(ntpTime & 0xffffffff) / (1ll << 32));

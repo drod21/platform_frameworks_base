@@ -302,7 +302,7 @@ void NuCachedSource2::fetchInternal() {
             mNumRetriesLeft = 0;
             return;
         } else if (err != OK) {
-            ALOGI("The attempt to reconnect failed, %d retries remaining",
+            LOGI("The attempt to reconnect failed, %d retries remaining",
                  mNumRetriesLeft);
 
             return;
@@ -321,7 +321,7 @@ void NuCachedSource2::fetchInternal() {
         mFinalStatus = n;
         mCache->releasePage(page);
     } else if (n == 0) {
-        ALOGI("ERROR_END_OF_STREAM");
+        LOGI("ERROR_END_OF_STREAM");
 
         mNumRetriesLeft = 0;
         mFinalStatus = ERROR_END_OF_STREAM;
@@ -329,7 +329,7 @@ void NuCachedSource2::fetchInternal() {
         mCache->releasePage(page);
     } else {
         if (mFinalStatus != OK) {
-            ALOGI("retrying a previously failed read succeeded.");
+            LOGI("retrying a previously failed read succeeded.");
         }
         mNumRetriesLeft = kMaxNumRetries;
         mFinalStatus = OK;
@@ -355,7 +355,7 @@ void NuCachedSource2::onFetch() {
 
     if (mFetching || keepAlive) {
         if (keepAlive) {
-            ALOGI("Keep alive");
+            LOGI("Keep alive");
         }
 
         fetchInternal();
@@ -363,7 +363,7 @@ void NuCachedSource2::onFetch() {
         mLastFetchTimeUs = ALooper::GetNowUs();
 
         if (mFetching && mCache->totalSize() >= mHighwaterThresholdBytes) {
-            ALOGI("Cache full, done prefetching for now");
+            LOGI("Cache full, done prefetching for now");
             mFetching = false;
 
             if (mDisconnectAtHighwatermark
@@ -448,7 +448,7 @@ void NuCachedSource2::restartPrefetcherIfNecessary_l(
     size_t actualBytes = mCache->releaseFromStart(maxBytes);
     mCacheOffset += actualBytes;
 
-    ALOGI("restarting prefetcher, totalSize = %d", mCache->totalSize());
+    LOGI("restarting prefetcher, totalSize = %d", mCache->totalSize());
     mFetching = true;
 }
 
@@ -584,7 +584,7 @@ status_t NuCachedSource2::seekInternal_l(off64_t offset) {
         return OK;
     }
 
-    ALOGI("new range: offset= %lld", offset);
+    LOGI("new range: offset= %lld", offset);
 
     mCacheOffset = offset;
 

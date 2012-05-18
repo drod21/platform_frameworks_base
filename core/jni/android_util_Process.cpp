@@ -291,7 +291,7 @@ void android_os_Process_setThreadPriority(JNIEnv* env, jobject clazz,
         }
     }
 
-    //ALOGI("Setting priority of %d: %d, getpriority returns %d\n",
+    //LOGI("Setting priority of %d: %d, getpriority returns %d\n",
     //     pid, pri, getpriority(PRIO_PROCESS, pid));
 }
 
@@ -310,7 +310,7 @@ jint android_os_Process_getThreadPriority(JNIEnv* env, jobject clazz,
     if (errno != 0) {
         signalExceptionForPriorityError(env, clazz, errno);
     }
-    //ALOGI("Returning priority of %d: %d\n", pid, pri);
+    //LOGI("Returning priority of %d: %d\n", pid, pri);
     return pri;
 }
 
@@ -362,7 +362,7 @@ jint android_os_Process_setGid(JNIEnv* env, jobject clazz, jint uid)
 
 static int pid_compare(const void* v1, const void* v2)
 {
-    //ALOGI("Compare %d vs %d\n", *((const jint*)v1), *((const jint*)v2));
+    //LOGI("Compare %d vs %d\n", *((const jint*)v1), *((const jint*)v2));
     return *((const jint*)v1) - *((const jint*)v2);
 }
 
@@ -420,7 +420,7 @@ static jlong android_os_Process_getFreeMemory(JNIEnv* env, jobject clazz)
 void android_os_Process_readProcLines(JNIEnv* env, jobject clazz, jstring fileStr,
                                       jobjectArray reqFields, jlongArray outFields)
 {
-    //ALOGI("getMemInfo: %p %p", reqFields, outFields);
+    //LOGI("getMemInfo: %p %p", reqFields, outFields);
 
     if (fileStr == NULL || reqFields == NULL || outFields == NULL) {
         jniThrowNullPointerException(env, NULL);
@@ -447,7 +447,7 @@ void android_os_Process_readProcLines(JNIEnv* env, jobject clazz, jstring fileSt
         jobject obj = env->GetObjectArrayElement(reqFields, i);
         if (obj != NULL) {
             const char* str8 = env->GetStringUTFChars((jstring)obj, NULL);
-            //ALOGI("String at %d: %p = %s", i, obj, str8);
+            //LOGI("String at %d: %p = %s", i, obj, str8);
             if (str8 == NULL) {
                 jniThrowNullPointerException(env, "Element in reqFields");
                 return;
@@ -465,7 +465,7 @@ void android_os_Process_readProcLines(JNIEnv* env, jobject clazz, jstring fileSt
         return;
     }
 
-    //ALOGI("Clearing %d sizes", count);
+    //LOGI("Clearing %d sizes", count);
     for (i=0; i<count; i++) {
         sizesArray[i] = 0;
     }
@@ -489,7 +489,7 @@ void android_os_Process_readProcLines(JNIEnv* env, jobject clazz, jstring fileSt
         char* p = buffer;
         while (*p && foundCount < count) {
             bool skipToEol = true;
-            //ALOGI("Parsing at: %s", p);
+            //LOGI("Parsing at: %s", p);
             for (i=0; i<count; i++) {
                 const String8& field = fields[i];
                 if (strncmp(p, field.string(), field.length()) == 0) {
@@ -504,7 +504,7 @@ void android_os_Process_readProcLines(JNIEnv* env, jobject clazz, jstring fileSt
                     }
                     char* end;
                     sizesArray[i] = strtoll(num, &end, 10);
-                    //ALOGI("Field %s = %d", field.string(), sizesArray[i]);
+                    //LOGI("Field %s = %d", field.string(), sizesArray[i]);
                     foundCount++;
                     break;
                 }
@@ -524,7 +524,7 @@ void android_os_Process_readProcLines(JNIEnv* env, jobject clazz, jstring fileSt
         ALOGW("Unable to open %s", file.string());
     }
 
-    //ALOGI("Done!");
+    //LOGI("Done!");
     env->ReleaseLongArrayElements(outFields, sizesArray, 0);
 }
 
@@ -570,7 +570,7 @@ jintArray android_os_Process_getPids(JNIEnv* env, jobject clazz,
 
         char* end;
         int pid = strtol(entry->d_name, &end, 10);
-        //ALOGI("File %s pid=%d\n", entry->d_name, pid);
+        //LOGI("File %s pid=%d\n", entry->d_name, pid);
         if (curPos >= curCount) {
             jsize newCount = (curCount == 0) ? 10 : (curCount*2);
             jintArray newArray = env->NewIntArray(newCount);
@@ -693,7 +693,7 @@ jboolean android_os_Process_parseProcLineArray(JNIEnv* env, jobject clazz,
             }
         }
 
-        //ALOGI("Field %d: %d-%d dest=%d mode=0x%x\n", i, start, end, di, mode);
+        //LOGI("Field %d: %d-%d dest=%d mode=0x%x\n", i, start, end, di, mode);
 
         if ((mode&(PROC_OUT_FLOAT|PROC_OUT_LONG|PROC_OUT_STRING)) != 0) {
             char c = buffer[end];
@@ -792,7 +792,7 @@ void android_os_Process_setApplicationObject(JNIEnv* env, jobject clazz,
 void android_os_Process_sendSignal(JNIEnv* env, jobject clazz, jint pid, jint sig)
 {
     if (pid > 0) {
-        ALOGI("Sending signal. PID: %d SIG: %d", pid, sig);
+        LOGI("Sending signal. PID: %d SIG: %d", pid, sig);
         kill(pid, sig);
     }
 }

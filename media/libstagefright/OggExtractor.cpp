@@ -189,9 +189,9 @@ status_t OggSource::read(
 #if 0
     int64_t timeUs;
     if (packet->meta_data()->findInt64(kKeyTime, &timeUs)) {
-        ALOGI("found time = %lld us", timeUs);
+        LOGI("found time = %lld us", timeUs);
     } else {
-        ALOGI("NO time");
+        LOGI("NO time");
     }
 #endif
 
@@ -777,7 +777,7 @@ void MyVorbisExtractor::parseFileMetaData() {
         const char *comment = mVc.user_comments[i];
         size_t commentLength = mVc.comment_lengths[i];
         parseVorbisComment(mFileMeta, comment, commentLength);
-        //ALOGI("comment #%d: '%s'", i + 1, mVc.user_comments[i]);
+        //LOGI("comment #%d: '%s'", i + 1, mVc.user_comments[i]);
     }
 }
 

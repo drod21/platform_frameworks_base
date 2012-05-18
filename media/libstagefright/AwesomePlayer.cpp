@@ -280,9 +280,9 @@ status_t AwesomePlayer::setDataSource_l(
     }
 
     if (!(mFlags & INCOGNITO)) {
-        ALOGI("setDataSource_l('%s')", mUri.string());
+        LOGI("setDataSource_l('%s')", mUri.string());
     } else {
-        ALOGI("setDataSource_l(URL suppressed)");
+        LOGI("setDataSource_l(URL suppressed)");
     }
 
     // The actual work will be done during preparation in the call to
@@ -483,7 +483,7 @@ void AwesomePlayer::reset_l() {
     if (mFlags & PREPARING) {
         modifyFlags(PREPARE_CANCELLED, SET);
         if (mConnectingDataSource != NULL) {
-            ALOGI("interrupting the connection process");
+            LOGI("interrupting the connection process");
             mConnectingDataSource->disconnect();
         }
 
@@ -686,7 +686,7 @@ void AwesomePlayer::onBufferingUpdate() {
 
                 if ((mFlags & PLAYING) && !eos
                         && (cachedDataRemaining < kLowWaterMarkBytes)) {
-                    ALOGI("cache is running low (< %d) , pausing.",
+                    LOGI("cache is running low (< %d) , pausing.",
                          kLowWaterMarkBytes);
                     modifyFlags(CACHE_UNDERRUN, SET);
                     pause_l();
@@ -695,7 +695,7 @@ void AwesomePlayer::onBufferingUpdate() {
                     notifyListener_l(MEDIA_INFO, MEDIA_INFO_BUFFERING_START);
                 } else if (eos || cachedDataRemaining > kHighWaterMarkBytes) {
                     if (mFlags & CACHE_UNDERRUN) {
-                        ALOGI("cache has filled up (> %d), resuming.",
+                        LOGI("cache has filled up (> %d), resuming.",
                              kHighWaterMarkBytes);
                         modifyFlags(CACHE_UNDERRUN, CLEAR);
                         play_l();
@@ -742,7 +742,7 @@ void AwesomePlayer::onBufferingUpdate() {
 
         if ((mFlags & PLAYING) && !eos
                 && (cachedDurationUs < kLowWaterMarkUs)) {
-            ALOGI("cache is running low (%.2f secs) , pausing.",
+            LOGI("cache is running low (%.2f secs) , pausing.",
                  cachedDurationUs / 1E6);
             modifyFlags(CACHE_UNDERRUN, SET);
             pause_l();
@@ -751,7 +751,7 @@ void AwesomePlayer::onBufferingUpdate() {
             notifyListener_l(MEDIA_INFO, MEDIA_INFO_BUFFERING_START);
         } else if (eos || cachedDurationUs > kHighWaterMarkUs) {
             if (mFlags & CACHE_UNDERRUN) {
-                ALOGI("cache has filled up (%.2f secs), resuming.",
+                LOGI("cache has filled up (%.2f secs), resuming.",
                      cachedDurationUs / 1E6);
                 modifyFlags(CACHE_UNDERRUN, CLEAR);
                 play_l();
@@ -1667,7 +1667,7 @@ void AwesomePlayer::onVideoEvent() {
 
     if (mSeeking == SEEK_VIDEO_ONLY) {
         if (mSeekTimeUs > timeUs) {
-            ALOGI("XXX mSeekTimeUs = %lld us, timeUs = %lld us",
+            LOGI("XXX mSeekTimeUs = %lld us, timeUs = %lld us",
                  mSeekTimeUs, timeUs);
         }
     }
@@ -1715,7 +1715,7 @@ void AwesomePlayer::onVideoEvent() {
         int64_t latenessUs = nowUs - timeUs;
 
         if (latenessUs > 0) {
-            ALOGI("after SEEK_VIDEO_ONLY we're late by %.2f secs", latenessUs / 1E6);
+            LOGI("after SEEK_VIDEO_ONLY we're late by %.2f secs", latenessUs / 1E6);
         }
     }
 
@@ -1730,7 +1730,7 @@ void AwesomePlayer::onVideoEvent() {
                 && mAudioPlayer != NULL
                 && mAudioPlayer->getMediaTimeMapping(
                     &realTimeUs, &mediaTimeUs)) {
-            ALOGI("we're much too late (%.2f secs), video skipping ahead",
+            LOGI("we're much too late (%.2f secs), video skipping ahead",
                  latenessUs / 1E6);
 
             mVideoBuffer->release();
@@ -1979,7 +1979,7 @@ status_t AwesomePlayer::finishSetDataSource_l() {
         if (err != OK) {
             mConnectingDataSource.clear();
 
-            ALOGI("mConnectingDataSource->connect() returned %d", err);
+            LOGI("mConnectingDataSource->connect() returned %d", err);
             return err;
         }
 
@@ -2077,7 +2077,7 @@ status_t AwesomePlayer::finishSetDataSource_l() {
             }
 
             if (mFlags & PREPARE_CANCELLED) {
-                ALOGI("Prepare cancelled while waiting for initial cache fill.");
+                LOGI("Prepare cancelled while waiting for initial cache fill.");
                 return UNKNOWN_ERROR;
             }
         }
@@ -2159,7 +2159,7 @@ void AwesomePlayer::onPrepareAsyncEvent() {
     Mutex::Autolock autoLock(mLock);
 
     if (mFlags & PREPARE_CANCELLED) {
-        ALOGI("prepare was cancelled before doing anything");
+        LOGI("prepare was cancelled before doing anything");
         abortPrepare(UNKNOWN_ERROR);
         return;
     }

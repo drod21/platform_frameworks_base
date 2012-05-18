@@ -328,7 +328,7 @@ android_media_MediaRecorder_prepare(JNIEnv *env, jobject thiz)
             return;
         }
 
-        ALOGI("prepare: surface=%p (identity=%d)", native_surface.get(), native_surface->getIdentity());
+        LOGI("prepare: surface=%p (identity=%d)", native_surface.get(), native_surface->getIdentity());
         if (process_media_recorder_call(env, mr->setPreviewSurface(native_surface), "java/lang/RuntimeException", "setPreviewSurface failed.")) {
             return;
         }

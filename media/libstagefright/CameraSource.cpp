@@ -660,7 +660,7 @@ status_t CameraSource::stop() {
     }
 
     if (mCollectStats) {
-        ALOGI("Frames received/encoded/dropped: %d/%d/%d in %lld us",
+        LOGI("Frames received/encoded/dropped: %d/%d/%d in %lld us",
                 mNumFramesReceived, mNumFramesEncoded, mNumFramesDropped,
                 mLastFrameTimestampUs - mFirstFrameTimeUs);
     }
@@ -832,7 +832,7 @@ void CameraSource::ProxyListener::dataCallbackTimestamp(
 }
 
 void CameraSource::DeathNotifier::binderDied(const wp<IBinder>& who) {
-    ALOGI("Camera recording proxy died");
+    LOGI("Camera recording proxy died");
 }
 
 }  // namespace android

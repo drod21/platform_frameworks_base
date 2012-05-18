@@ -121,7 +121,7 @@ public:
             target->cb(filename, state, target->data);
             delete target;
         } else {
-            ALOGI("Didn't find the callback handler for: %s\n", filename);
+            LOGI("Didn't find the callback handler for: %s\n", filename);
         }
     }
 

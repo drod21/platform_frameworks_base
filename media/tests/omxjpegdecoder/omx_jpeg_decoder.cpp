@@ -113,7 +113,7 @@ bool OmxJpegImageDecoder::onDecode(SkStream* stream,
 
     // mode == DecodePixels
     if (!this->allocPixelRef(bm, NULL)) {
-        ALOGI("Cannot allocPixelRef()!");
+        LOGI("Cannot allocPixelRef()!");
         return false;
     }
 

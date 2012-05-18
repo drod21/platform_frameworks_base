@@ -572,21 +572,21 @@ void InputDispatcher::dropInboundEventLocked(EventEntry* entry, DropReason dropR
         reason = "inbound event was dropped because the policy consumed it";
         break;
     case DROP_REASON_DISABLED:
-        ALOGI("Dropped event because input dispatch is disabled.");
+        LOGI("Dropped event because input dispatch is disabled.");
         reason = "inbound event was dropped because input dispatch is disabled";
         break;
     case DROP_REASON_APP_SWITCH:
-        ALOGI("Dropped event because of pending overdue app switch.");
+        LOGI("Dropped event because of pending overdue app switch.");
         reason = "inbound event was dropped because of pending overdue app switch";
         break;
     case DROP_REASON_BLOCKED:
-        ALOGI("Dropped event because the current application is not responding and the user "
+        LOGI("Dropped event because the current application is not responding and the user "
                 "has started interacting with a different application.");
         reason = "inbound event was dropped because the current application is not responding "
                 "and the user has started interacting with a different application";
         break;
     case DROP_REASON_STALE:
-        ALOGI("Dropped event because it is stale.");
+        LOGI("Dropped event because it is stale.");
         reason = "inbound event was dropped because it is stale";
         break;
     default:
@@ -1190,7 +1190,7 @@ int32_t InputDispatcher::findFocusedWindowTargetsLocked(nsecs_t currentTime,
             goto Unresponsive;
         }
 
-        ALOGI("Dropping event because there is no focused window or focused application.");
+        LOGI("Dropping event because there is no focused window or focused application.");
         injectionResult = INPUT_EVENT_INJECTION_FAILED;
         goto Failed;
     }
@@ -1409,7 +1409,7 @@ int32_t InputDispatcher::findTouchedWindowTargetsLocked(nsecs_t currentTime,
                 goto Unresponsive;
             }
 
-            ALOGI("Dropping event because there is no touched window or focused application.");
+            LOGI("Dropping event because there is no touched window or focused application.");
             injectionResult = INPUT_EVENT_INJECTION_FAILED;
             goto Failed;
         }
@@ -3800,7 +3800,7 @@ void InputDispatcher::onANRLocked(
         nsecs_t currentTime, const sp<InputApplicationHandle>& applicationHandle,
         const sp<InputWindowHandle>& windowHandle,
         nsecs_t eventTime, nsecs_t waitStartTime) {
-    ALOGI("Application is not responding: %s.  "
+    LOGI("Application is not responding: %s.  "
             "%01.1fms since event, %01.1fms since wait started",
             getApplicationWindowLabelLocked(applicationHandle, windowHandle).string(),
             (currentTime - eventTime) / 1000000.0,

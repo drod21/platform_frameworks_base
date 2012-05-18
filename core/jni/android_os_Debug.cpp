@@ -184,7 +184,7 @@ static void read_mapinfo(FILE *fp, stats_t* stats)
             }
         }
 
-        //ALOGI("native=%d dalvik=%d sqlite=%d: %s\n", isNativeHeap, isDalvikHeap,
+        //LOGI("native=%d dalvik=%d sqlite=%d: %s\n", isNativeHeap, isDalvikHeap,
         //    isSqliteHeap, line);
             
         while (true) {

@@ -56,7 +56,7 @@ static void dumpKernelStacks(JNIEnv* env, jobject clazz, jstring pathStr) {
     char buf[128];
     DIR* taskdir;
 
-    ALOGI("dumpKernelStacks");
+    LOGI("dumpKernelStacks");
     if (!pathStr) {
         jniThrowException(env, "java/lang/IllegalArgumentException", "Null path");
         return;
