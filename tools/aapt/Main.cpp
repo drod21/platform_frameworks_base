@@ -69,7 +69,6 @@ void usage(void)
         "        [-F apk-file] [-J R-file-dir] \\\n"
         "        [--product product1,product2,...] \\\n"
         "        [-c CONFIGS] [--preferred-configurations CONFIGS] \\\n"
-        "        [-o] \\\n"
         "        [raw-files-dir [raw-files-dir] ...]\n"
         "\n"
         "   Package the android resources.  It will read assets and resources that are\n"
@@ -110,7 +109,6 @@ void usage(void)
         "   -j  specify a jar or zip file containing classes to include\n"
         "   -k  junk path of file(s) added\n"
         "   -m  make package directories under location specified by -J\n"
-        "   -o  create overlay package (ie only resources; expects <overlay-package> in manifest)\n"
 #if 0
         "   -p  pseudolocalize the default configuration\n"
 #endif
@@ -178,7 +176,11 @@ void usage(void)
         "   --non-constant-id\n"
         "       Make the resources ID non constant. This is required to make an R java class\n"
         "       that does not contain the final value but is used to make reusable compiled\n"
-        "       libraries that need to access resources.\n");
+        "       libraries that need to access resources.\n"
+        "   --ignore-assets\n"
+        "       Assets to be ignored. Default pattern is:\n"
+        "       %s\n",
+        gDefaultIgnoreAssets);
 }
 
 /*
@@ -291,9 +293,6 @@ int main(int argc, char* const argv[])
                 break;
             case 'm':
                 bundle.setMakePackageDirs(true);
-                break;
-            case 'o':
-                bundle.setIsOverlayPackage(true);
                 break;
 #if 0
             case 'p':
@@ -556,7 +555,16 @@ int main(int argc, char* const argv[])
                     bundle.setNonConstantId(true);
                 } else if (strcmp(cp, "-no-crunch") == 0) {
                     bundle.setUseCrunchCache(true);
-                }else {
+                } else if (strcmp(cp, "-ignore-assets") == 0) {
+                    argc--;
+                    argv++;
+                    if (!argc) {
+                        fprintf(stderr, "ERROR: No argument supplied for '--ignore-assets' option\n");
+                        wantUsage = true;
+                        goto bail;
+                    }
+                    gUserIgnoreAssets = argv[0];
+                } else {
                     fprintf(stderr, "ERROR: Unknown option '-%s'\n", cp);
                     wantUsage = true;
                     goto bail;
