@@ -47,6 +47,7 @@ import java.lang.IllegalArgumentException;
 public class LockTextSMS extends TextView {
 
     private boolean mIsAttached;
+    private Handler mHandler;
     
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
     private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
@@ -66,6 +67,10 @@ public class LockTextSMS extends TextView {
 
     public LockTextSMS(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        
+        mHandler = new Handler();
+        SettingsObserver settingsObserver = new SettingsObserver(mHandler);
+        settingsObserver.observe();
 
         updateSettings();
         
@@ -95,8 +100,8 @@ public class LockTextSMS extends TextView {
         super.onDetachedFromWindow();
         //do not allow to detach or unregister receiver
         //only allow this when the user has selected to not use it
-        boolean dontShowTexts = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SHOW_TEXTS, 0) == 0);
-        if (dontShowTexts) {
+        boolean showTexts = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SHOW_TEXTS, 0) == 0);
+        if (showTexts) {
         	if (mIsAttached) {
                 getContext().unregisterReceiver(mIntentReceiver);
                 getContext().unregisterReceiver(mShutDownReceiver);
@@ -108,11 +113,10 @@ public class LockTextSMS extends TextView {
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        	boolean showTexts = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SHOW_TEXTS, 0) == 1);
             Log.i(TAG, "Intent recieved: " + intent.getAction());
 
             if (intent.getAction() == SMS_RECEIVED) {
-            	Bundle bundle = intent.getExtras();
+                Bundle bundle = intent.getExtras();
                 if (bundle != null) {
                 	getYourText(bundle);
                 }
@@ -127,29 +131,17 @@ public class LockTextSMS extends TextView {
             //needed to search for shutdown to prevent hotboots upon reboots with 
             //SMS popup visible
             if (intent.getAction() == ACTION_SHUTDOWN) {
-<<<<<<< HEAD
               Settings.System.putInt(getContext().getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1);
-=======
-            	Settings.System.putInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1);
->>>>>>> 2d04f77... SMS Popup: code cleanup, recode, and possible fix for activation reboots
             }
         }
     };
         
     private void keepMyBoxUp() {
-<<<<<<< HEAD
     	boolean showTexts = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1) == 0);
 	boolean musicPlaying = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_MUSIC, 0) == 1);
     	
 	if (showTexts) {
     	  Uri uri = Uri.parse("content://sms/inbox");
-=======
-    	boolean canShowTexts = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 1) == 0);
-    	boolean musicPlaying = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_MUSIC, 0) == 1);
-    	
-    	if (canShowTexts) {
-    		Uri uri = Uri.parse("content://sms/inbox");
->>>>>>> 2d04f77... SMS Popup: code cleanup, recode, and possible fix for activation reboots
 
           Cursor c = mContext.getContentResolver().query(uri, null, "read = 0", null, null);
           int unreadSMSCount = c.getCount();
@@ -184,39 +176,6 @@ public class LockTextSMS extends TextView {
     	}
     }
     
-    //stupid lockscreen's getting destroyed means we get to have double the work on getting sms info
-    private void getYourText(Bundle bundle) {
-    	boolean showTexts = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SHOW_TEXTS, 0) == 1);
-    	boolean musicPlaying = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_MUSIC, 0) == 1);
-    	
-    	if (showTexts && !musicPlaying) {
-    		Object[] pdus = (Object[])bundle.get("pdus");
-            final SmsMessage[] messages = new SmsMessage[pdus.length];
-            for (int i = 0; i < pdus.length; i++) {
-                messages[i] = SmsMessage.createFromPdu((byte[])pdus[i]);
-            }
-            if (messages.length > -1) {
-            	for (int i = 0; i< pdus.length; i++) {
-                	body = messages[i].getDisplayMessageBody();
-                	findName = messages[i].getOriginatingAddress();
-                	Uri personUri = Uri.withAppendedPath( ContactsContract.PhoneLookup.CONTENT_FILTER_URI, findName);
-                	Cursor cur = mContext.getContentResolver().query(personUri, new String[] { ContactsContract.PhoneLookup.DISPLAY_NAME }, null, null, null );
-                	if (cur.moveToFirst()) {
-                		int nameIndex = cur.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME);
-                		caller = cur.getString(nameIndex);
-                	}
-                	if (caller == null){
-                		caller = findName;
-                	}
-                    updateCurrentText(body, caller);
-                    setBackgroundResource(R.drawable.ic_lockscreen_player_background_old);
-                    Settings.System.putInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SMS_CROSS, 0);
-                    setVisibility(View.VISIBLE);
-            	}
-            }
-        }
-    }
-    
     private void updateCurrentText(String textBody, String callerID) {
     	String newewstText = callerID + ": " + textBody;
     	
@@ -229,7 +188,6 @@ public class LockTextSMS extends TextView {
     	
     	setText(SMSText);
     }
-<<<<<<< HEAD
     
     private void getYourText(Bundle bundle) {
     	boolean showTexts = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_SHOW_TEXTS, 0) == 1);
@@ -281,8 +239,6 @@ public class LockTextSMS extends TextView {
             updateSettings();
         }
     }
-=======
->>>>>>> 2d04f77... SMS Popup: code cleanup, recode, and possible fix for activation reboots
 
     private void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
